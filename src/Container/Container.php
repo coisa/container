@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace CoiSA\Container;
 
 use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Container
@@ -65,6 +63,9 @@ final class Container implements ContainerInterface
     /**
      * {@inheritDoc}
      *
+     * @throws NotFoundException
+     * @throws ContainerException
+     *
      * @return mixed
      */
     public function get($id)
@@ -79,8 +80,8 @@ final class Container implements ContainerInterface
     /**
      * @param string $id
      *
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerExceptionInterface
+     * @throws NotFoundException
+     * @throws ContainerException
      *
      * @return mixed
      */
