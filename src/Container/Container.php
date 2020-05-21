@@ -89,14 +89,21 @@ final class Container implements ContainerInterface
         $factory = $this->findFactory($id);
 
         if (!$factory) {
-            // @TODO throw new NotFoundExceptionInterface
+            throw new NotFoundException(\sprintf(
+                'No entry identified by "%s" was found in the container.',
+                $id
+            ));
         }
 
         try {
             $instance = \call_user_func($factory, $this);
             // @TODO service provider extension
         } catch (\Throwable $exception) {
-            // @TODO throw new ContainerExceptionInterface
+            throw new ContainerException(\sprintf(
+                'An error with message "%s" occurs trying to build entry identified by "%s".',
+                $exception->getMessage(),
+                $id
+            ), $exception->getCode(), $exception);
         }
 
         return $instance;
