@@ -1,0 +1,63 @@
+{
+    "name": "coisa/container",
+    "type": "library",
+    "description": "PSR-11 Container implementation",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "github@felipeabreu.com.br"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "psr/container": "^1.0"
+    },
+    "provide": {
+        "psr/container-implementation": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "jangregor/phpstan-prophecy": "^0.8.0",
+        "malukenho/docheader": "^0.1.8",
+        "phpstan/phpstan": "^0.12.25",
+        "phpunit/phpunit": "^9.1",
+        "sensiolabs/security-checker": "^6.0",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "config": {
+        "prefer-stable": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "CoiSA\\Container\\": "src/Container"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CoiSA\\Container\\Test\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "scripts": {
+        "analyze": "phpstan analyze",
+        "check": [
+            "@test",
+            "@sniff",
+            "@cs-check",
+            "@analyze",
+            "@docheader-check"
+        ],
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "docheader-check": "docheader check ./src ./tests",
+        "sniff": "phpcs",
+        "test": "phpunit --color=always"
+    }
+}
