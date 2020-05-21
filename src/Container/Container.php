@@ -24,7 +24,7 @@ use Psr\Container\ContainerInterface;
 final class Container implements ContainerInterface
 {
     /**
-     * @var ServiceProviderInterface[]
+     * @var ServiceProviderInterface
      */
     private $serviceProvider;
 
@@ -99,7 +99,7 @@ final class Container implements ContainerInterface
     /**
      * @param string $id
      *
-     * @return null|callable
+     * @return callable|false
      */
     private function findFactory($id)
     {
@@ -108,5 +108,7 @@ final class Container implements ContainerInterface
         if (\array_key_exists($id, $factories)) {
             return $factories[$id];
         }
+
+        return false;
     }
 }

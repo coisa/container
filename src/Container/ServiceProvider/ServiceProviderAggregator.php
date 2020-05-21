@@ -30,7 +30,7 @@ final class ServiceProviderAggregator implements ServiceProviderInterface
     /**
      * ServiceProviderAggregator constructor.
      *
-     * @param array $serviceProviders
+     * @param ServiceProviderInterface[] $serviceProviders
      */
     public function __construct(array $serviceProviders = array())
     {
