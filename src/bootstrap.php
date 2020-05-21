@@ -11,15 +11,8 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-declare(strict_types=1);
-
-use Composer\Autoload\ClassLoader;
-
-return (function ($autoloadFiles): ClassLoader {
-    $loader = \array_reduce($autoloadFiles, function (
-        ?ClassLoader $autoloader,
-        string $path
-    ) {
+return (function ($autoloadFiles) {
+    $loader = \array_reduce($autoloadFiles, function ($autoloader, $path) {
         return $autoloader ?? (\file_exists($path) ? require $path : null);
     });
 
@@ -30,7 +23,7 @@ return (function ($autoloadFiles): ClassLoader {
     }
 
     return $loader;
-})([
+})(array(
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php',
-]);
+));

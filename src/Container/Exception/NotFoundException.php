@@ -11,16 +11,14 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-declare(strict_types=1);
-
-namespace CoiSA\Container;
+namespace CoiSA\Container\Exception;
 
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * Class ContainerException
+ * Class NotFoundException
  *
- * @package CoiSA\Container
+ * @package CoiSA\Container\Exception
  */
 final class NotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
@@ -32,9 +30,9 @@ final class NotFoundException extends ContainerException implements NotFoundExce
     /**
      * @param string $id
      *
-     * @return static
+     * @return NotFoundException
      */
-    public static function createForIdentifier(string $id): self
+    public static function createForIdentifier(string $id)
     {
         return new self(\sprintf(self::MESSAGE_TEMPLATE, $id));
     }

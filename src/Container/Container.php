@@ -11,8 +11,6 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-declare(strict_types=1);
-
 namespace CoiSA\Container;
 
 use Interop\Container\ServiceProviderInterface;
@@ -28,12 +26,7 @@ final class Container implements ContainerInterface
     /**
      * @var ServiceProviderInterface[]
      */
-    private $serviceProviders;
-
-    /**
-     * @var callable[]
-     */
-    private $factories;
+    private $serviceProvider;
 
     /**
      * @var mixed[]
@@ -43,11 +36,11 @@ final class Container implements ContainerInterface
     /**
      * Container constructor.
      *
-     * @param ServiceProviderInterface ...$serviceProviders
+     * @param ServiceProviderInterface $serviceProvider
      */
-    public function __construct(ServiceProviderInterface ...$serviceProviders)
+    public function __construct(ServiceProviderInterface $serviceProvider)
     {
-        $this->serviceProviders = \array_reverse($serviceProviders);
+        $this->serviceProvider = $serviceProvider;
     }
 
     /**
@@ -63,8 +56,8 @@ final class Container implements ContainerInterface
     /**
      * {@inheritDoc}
      *
-     * @throws NotFoundException
-     * @throws ContainerException
+     * @throws Exception\NotFoundException
+     * @throws Exception\ContainerException
      *
      * @return mixed
      */
@@ -80,24 +73,24 @@ final class Container implements ContainerInterface
     /**
      * @param string $id
      *
-     * @throws NotFoundException
-     * @throws ContainerException
+     * @throws Exception\NotFoundException
+     * @throws Exception\ContainerException
      *
      * @return mixed
      */
-    private function build(string $id)
+    private function build($id)
     {
         $factory = $this->findFactory($id);
 
         if (!$factory) {
-            throw NotFoundException::createForIdentifier($id);
+            throw Exception\NotFoundException::createForIdentifier($id);
         }
 
         try {
             $instance = \call_user_func($factory, $this);
             // @TODO service provider extension
-        } catch (\Throwable $throwable) {
-            throw ContainerException::createFromThrowableForIdentifier($throwable, $id);
+        } catch (\Exception $exception) {
+            throw Exception\ContainerException::createFromExceptionForIdentifier($exception, $id);
         }
 
         return $instance;
@@ -108,18 +101,12 @@ final class Container implements ContainerInterface
      *
      * @return null|callable
      */
-    private function findFactory(string $id)
+    private function findFactory($id)
     {
-        if (false === \array_key_exists($id, $this->factories)) {
-            foreach ($this->serviceProviders as $serviceProvider) {
-                $this->factories[$id] = $serviceProvider->getFactories()[$id] ?? null;
+        $factories = \array_filter($this->serviceProvider->getFactories(), 'is_callable');
 
-                if (\is_callable($this->factories[$id])) {
-                    break;
-                }
-            }
+        if (\array_key_exists($id, $factories)) {
+            return $factories[$id];
         }
-
-        return $this->factories[$id] ?? null;
     }
 }

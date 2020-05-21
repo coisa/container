@@ -11,16 +11,14 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-declare(strict_types=1);
-
-namespace CoiSA\Container;
+namespace CoiSA\Container\Exception;
 
 use Psr\Container\ContainerExceptionInterface;
 
 /**
  * Class ContainerException
  *
- * @package CoiSA\Container
+ * @package CoiSA\Container\Exception
  */
 class ContainerException extends \Exception implements ContainerExceptionInterface
 {
@@ -32,14 +30,14 @@ class ContainerException extends \Exception implements ContainerExceptionInterfa
     /**
      * @param string $id
      *
-     * @return static
+     * @return ContainerException
      */
-    public static function createFromThrowableForIdentifier(\Throwable $throwable, string $id): self
+    public static function createFromExceptionForIdentifier(\Exception $exception, string $id)
     {
         return new self(
-            \sprintf(self::MESSAGE_TEMPLATE, $throwable->getMessage(), $id),
-            $throwable->getCode(),
-            $throwable
+            \sprintf(self::MESSAGE_TEMPLATE, $exception->getMessage(), $id),
+            $exception->getCode(),
+            $exception
         );
     }
 }
