@@ -24,4 +24,18 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class NotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
+    /**
+     * @const string
+     */
+    private const MESSAGE_TEMPLATE = 'No entry was found for "%s" identifier.';
+
+    /**
+     * @param string $id
+     *
+     * @return static
+     */
+    public static function createForIdentifier(string $id): self
+    {
+        return new self(\sprintf(self::MESSAGE_TEMPLATE, $id));
+    }
 }
