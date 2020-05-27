@@ -15,7 +15,7 @@ namespace CoiSA\Container;
 
 use CoiSA\Container\ServiceProvider\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as PsrContainer;
 
 /**
  * Class Container
@@ -30,7 +30,7 @@ final class Container implements ContainerInterface
     private $serviceProvider;
 
     /**
-     * @var null|ContainerInterface
+     * @var null|PsrContainer
      */
     private $rootContainer;
 
@@ -43,9 +43,9 @@ final class Container implements ContainerInterface
      * Container constructor.
      *
      * @param null|ServiceProviderInterface $serviceProvider
-     * @param null|ContainerInterface       $rootContainer
+     * @param null|PsrContainer             $rootContainer
      */
-    public function __construct(ServiceProviderInterface $serviceProvider = null, ContainerInterface $rootContainer = null)
+    public function __construct(ServiceProviderInterface $serviceProvider = null, PsrContainer $rootContainer = null)
     {
         $this->serviceProvider = $serviceProvider instanceof ServiceProviderAggregator ? $serviceProvider
             : new ServiceProviderAggregator(\array_filter(array($serviceProvider)));
@@ -82,9 +82,7 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * @param ServiceProviderInterface $serviceProvider
-     *
-     * @return Container
+     * {@inheritDoc}
      */
     public function register(ServiceProviderInterface $serviceProvider)
     {
