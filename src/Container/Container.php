@@ -128,7 +128,9 @@ final class Container implements ContainerInterface
         }
 
         try {
-            $instance = $instance ?? \call_user_func($factory, $this);
+            if (!isset($instance)) {
+                $instance = \call_user_func($factory, $this);
+            }
 
             return $this->extend($id, $instance);
         } catch (\Exception $exception) {
