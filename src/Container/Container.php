@@ -13,6 +13,7 @@
 
 namespace CoiSA\Container;
 
+use CoiSA\Container\ServiceProvider\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -29,18 +30,27 @@ final class Container implements ContainerInterface
     private $serviceProvider;
 
     /**
+     * @var null|ContainerInterface
+     */
+    private $rootContainer;
+
+    /**
      * @var mixed[]
      */
-    private $shared;
+    private $shared = array();
 
     /**
      * Container constructor.
      *
-     * @param ServiceProviderInterface $serviceProvider
+     * @param null|ServiceProviderInterface $serviceProvider
+     * @param null|ContainerInterface       $rootContainer
      */
-    public function __construct(ServiceProviderInterface $serviceProvider)
+    public function __construct(ServiceProviderInterface $serviceProvider = null, ContainerInterface $rootContainer = null)
     {
-        $this->serviceProvider = $serviceProvider;
+        $this->serviceProvider = $serviceProvider instanceof ServiceProviderAggregator ? $serviceProvider
+            : new ServiceProviderAggregator(\array_filter(array($serviceProvider)));
+
+        $this->rootContainer = $rootContainer;
     }
 
     /**
@@ -50,7 +60,8 @@ final class Container implements ContainerInterface
      */
     public function has($id)
     {
-        return \is_callable($this->findFactory($id));
+        return \is_callable($this->findFactory($id))
+            || (null !== $this->rootContainer && $this->rootContainer->has($id));
     }
 
     /**
@@ -71,29 +82,15 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * @param string $id
+     * @param ServiceProviderInterface $serviceProvider
      *
-     * @throws Exception\NotFoundException
-     * @throws Exception\ContainerException
-     *
-     * @return mixed
+     * @return Container
      */
-    private function build($id)
+    public function register(ServiceProviderInterface $serviceProvider)
     {
-        $factory = $this->findFactory($id);
+        $this->serviceProvider->append($serviceProvider);
 
-        if (!$factory) {
-            throw Exception\NotFoundException::createForIdentifier($id);
-        }
-
-        try {
-            $instance = \call_user_func($factory, $this);
-            // @TODO service provider extension
-        } catch (\Exception $exception) {
-            throw Exception\ContainerException::createFromExceptionForIdentifier($exception, $id);
-        }
-
-        return $instance;
+        return $this;
     }
 
     /**
@@ -110,5 +107,51 @@ final class Container implements ContainerInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @throws Exception\NotFoundException
+     * @throws Exception\ContainerException
+     *
+     * @return mixed
+     */
+    private function build($id)
+    {
+        $factory = $this->findFactory($id);
+
+        if (!$factory && null !== $this->rootContainer) {
+            $instance = $this->rootContainer->get($id);
+        }
+
+        if (!$factory && !isset($instance)) {
+            throw Exception\NotFoundException::createForIdentifier($id);
+        }
+
+        try {
+            $instance = $instance ?? \call_user_func($factory, $this);
+
+            return $this->extend($id, $instance);
+        } catch (\Exception $exception) {
+            throw Exception\ContainerException::createFromExceptionForIdentifier($exception, $id);
+        }
+    }
+
+    /**
+     * @param string     $id
+     * @param null|mixed $object
+     *
+     * @return mixed
+     */
+    private function extend($id, $object = null)
+    {
+        $extensions = $this->serviceProvider->getExtensions();
+
+        if (false === \array_key_exists($id, $extensions)) {
+            return $object;
+        }
+
+        return \call_user_func($extensions[$id], $this, $object);
     }
 }

@@ -14,6 +14,7 @@
 namespace CoiSA\Container\ServiceProvider;
 
 use Interop\Container\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ServiceProviderAggregator
@@ -87,9 +88,27 @@ final class ServiceProviderAggregator implements ServiceProviderInterface
             return $serviceProvider->getExtensions();
         }, $this->serviceProviders);
 
-        return \call_user_func_array(
-            'array_merge',
+        $merged = \call_user_func_array(
+            '\array_merge_recursive',
             \array_reverse($extensions)
         );
+
+        foreach ($merged as $key => $closure) {
+            if (\is_callable($closure)) {
+                continue;
+            }
+
+            $merged[$key] = \array_reduce($closure, function ($extension, callable $current) {
+                if (!$extension) {
+                    return $current;
+                }
+
+                return function (ContainerInterface $container, $previous = null) use ($current, $extension) {
+                    return \call_user_func($extension, $container, $current($container, $previous));
+                };
+            });
+        }
+
+        return $merged;
     }
 }
