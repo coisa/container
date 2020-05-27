@@ -75,7 +75,7 @@ final class Container implements ContainerInterface
     public function get($id)
     {
         if (false === \array_key_exists($id, $this->shared)) {
-            $this->shared[$id] = $this->build($id);
+            $this->shared[$id] = $this->resolve($id);
         }
 
         return $this->shared[$id];
@@ -115,7 +115,7 @@ final class Container implements ContainerInterface
      *
      * @return mixed
      */
-    private function build($id)
+    private function resolve($id)
     {
         $factory = $this->findFactory($id);
 
