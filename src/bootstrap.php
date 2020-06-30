@@ -13,7 +13,11 @@
 
 return (function ($autoloadFiles) {
     $loader = \array_reduce($autoloadFiles, function ($autoloader, $path) {
-        return $autoloader ?? (\file_exists($path) ? require $path : null);
+        if ($autoloader) {
+            return $autoloader;
+        }
+
+        return \file_exists($path) ? require $path : null;
     });
 
     if (!$loader) {
