@@ -30,11 +30,6 @@ final class Container implements ContainerInterface
     private $serviceProvider;
 
     /**
-     * @var null|PsrContainer
-     */
-    private $rootContainer;
-
-    /**
      * @var mixed[]
      */
     private $shared = array();
@@ -43,14 +38,11 @@ final class Container implements ContainerInterface
      * Container constructor.
      *
      * @param null|ServiceProviderInterface $serviceProvider
-     * @param null|PsrContainer             $rootContainer
      */
-    public function __construct(ServiceProviderInterface $serviceProvider = null, PsrContainer $rootContainer = null)
+    public function __construct(ServiceProviderInterface $serviceProvider = null)
     {
         $this->serviceProvider = $serviceProvider instanceof ServiceProviderAggregator ? $serviceProvider
             : new ServiceProviderAggregator(\array_filter(array($serviceProvider)));
-
-        $this->rootContainer = $rootContainer;
     }
 
     /**
@@ -60,8 +52,7 @@ final class Container implements ContainerInterface
      */
     public function has($id)
     {
-        return \is_callable($this->findFactory($id))
-            || (null !== $this->rootContainer && $this->rootContainer->has($id));
+        return \is_callable($this->findFactory($id));
     }
 
     /**
@@ -119,18 +110,12 @@ final class Container implements ContainerInterface
     {
         $factory = $this->findFactory($id);
 
-        if (!$factory && null !== $this->rootContainer) {
-            $instance = $this->rootContainer->get($id);
-        }
-
-        if (!$factory && !isset($instance)) {
+        if (!$factory) {
             throw Exception\NotFoundException::createForIdentifier($id);
         }
 
         try {
-            if (!isset($instance)) {
-                $instance = \call_user_func($factory, $this);
-            }
+            $instance = \call_user_func($factory, $this);
 
             return $this->extend($id, $instance);
         } catch (\Exception $exception) {
