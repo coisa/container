@@ -77,7 +77,7 @@ class B implements ServiceProviderInterface
     }
 }
 
-$container = ContainerFactory::getDefault();
+$container = ContainerFactory::getInstance();
 $container->register(new A());
 // or
 ContainerFactory::register(new B());
@@ -91,11 +91,11 @@ $container->get(Container::class)->register(new B());
 );
 
 \var_dump(
-    $container->get(ContainerAggregator::class) === ContainerAggregatorFactory::getDefault(),
-    $container->get(ContainerServiceProvider::class) === ContainerServiceProviderFactory::getDefault(),
-    $container->get(ServiceProviderAggregator::class) === ServiceProviderAggregatorFactory::getDefault(),
+    $container->get(ContainerAggregator::class) === ContainerAggregatorFactory::getInstance(),
+    $container->get(ContainerServiceProvider::class) === ContainerServiceProviderFactory::getInstance(),
+    $container->get(ServiceProviderAggregator::class) === ServiceProviderAggregatorFactory::getInstance(),
     $container === $container->get(Container::class),
-    $container === ContainerFactory::getDefault()
+    $container === ContainerFactory::getInstance()
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);
