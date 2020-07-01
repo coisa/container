@@ -13,6 +13,7 @@
 
 namespace CoiSA\Container\Aggregator;
 
+use CoiSA\Container\Exception;
 use Psr\Container\ContainerInterface as PsrContainer;
 
 /**
