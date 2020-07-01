@@ -25,7 +25,7 @@ final class NotFoundException extends ContainerException implements NotFoundExce
     /**
      * @const string
      */
-    private const MESSAGE_TEMPLATE = 'No entry was found for "%s" identifier.';
+    const MESSAGE_TEMPLATE = 'No entry was found for "%s" identifier.';
 
     /**
      * @param string $id

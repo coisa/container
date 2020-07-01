@@ -13,9 +13,8 @@
 
 namespace CoiSA\Container;
 
-use CoiSA\Container\ServiceProvider\ServiceProviderAggregator;
+use CoiSA\Container\Aggregator\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface as PsrContainer;
 
 /**
  * Class Container
@@ -25,9 +24,9 @@ use Psr\Container\ContainerInterface as PsrContainer;
 final class Container implements ContainerInterface
 {
     /**
-     * @var ServiceProviderInterface
+     * @var ServiceProviderAggregator
      */
-    private $serviceProvider;
+    private $serviceProviderAggregator;
 
     /**
      * @var mixed[]
@@ -37,12 +36,11 @@ final class Container implements ContainerInterface
     /**
      * Container constructor.
      *
-     * @param null|ServiceProviderInterface $serviceProvider
+     * @param ServiceProviderAggregator $serviceProviderAggregator
      */
-    public function __construct(ServiceProviderInterface $serviceProvider = null)
+    public function __construct(ServiceProviderAggregator $serviceProviderAggregator)
     {
-        $this->serviceProvider = $serviceProvider instanceof ServiceProviderAggregator ? $serviceProvider
-            : new ServiceProviderAggregator(\array_filter(array($serviceProvider)));
+        $this->serviceProviderAggregator = $serviceProviderAggregator;
     }
 
     /**
@@ -77,7 +75,7 @@ final class Container implements ContainerInterface
      */
     public function register(ServiceProviderInterface $serviceProvider)
     {
-        $this->serviceProvider->append($serviceProvider);
+        $this->serviceProviderAggregator->append($serviceProvider);
 
         return $this;
     }
@@ -89,7 +87,7 @@ final class Container implements ContainerInterface
      */
     private function findFactory($id)
     {
-        $factories = \array_filter($this->serviceProvider->getFactories(), 'is_callable');
+        $factories = \array_filter($this->serviceProviderAggregator->getFactories(), 'is_callable');
 
         if (\array_key_exists($id, $factories)) {
             return $factories[$id];
@@ -131,7 +129,7 @@ final class Container implements ContainerInterface
      */
     private function extend($id, $object = null)
     {
-        $extensions = $this->serviceProvider->getExtensions();
+        $extensions = $this->serviceProviderAggregator->getExtensions();
 
         if (false === \array_key_exists($id, $extensions)) {
             return $object;

@@ -11,7 +11,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container\ServiceProvider;
+namespace CoiSA\Container\Aggregator;
 
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
@@ -19,7 +19,7 @@ use Psr\Container\ContainerInterface;
 /**
  * Class ServiceProviderAggregator
  *
- * @package CoiSA\Container\ServiceProvider
+ * @package CoiSA\Container\Aggregator
  */
 final class ServiceProviderAggregator implements ServiceProviderInterface
 {

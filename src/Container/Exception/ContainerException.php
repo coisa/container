@@ -25,7 +25,7 @@ class ContainerException extends \Exception implements ContainerExceptionInterfa
     /**
      * @const string
      */
-    private const MESSAGE_TEMPLATE = 'Error message "%s" while retrieving the entry "%s".';
+    const MESSAGE_TEMPLATE = 'Error message "%s" while retrieving the entry "%s".';
 
     /**
      * @param string $id

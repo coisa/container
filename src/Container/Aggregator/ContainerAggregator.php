@@ -11,21 +11,21 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container;
+namespace CoiSA\Container\Aggregator;
 
 use Psr\Container\ContainerInterface as PsrContainer;
 
 /**
  * Class ContainerAggregator
  *
- * @package CoiSA\Container
+ * @package CoiSA\Container\Aggregator
  */
 final class ContainerAggregator implements PsrContainer
 {
     /**
      * @var array<PsrContainer>
      */
-    private $containers;
+    private $containers = array();
 
     /**
      * ContainerAggregator constructor.
