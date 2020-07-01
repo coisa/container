@@ -35,10 +35,10 @@ final class ContainerServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return array(
-            Container::class                 => array(ContainerFactory::class, 'getDefault'),
-            ContainerAggregator::class       => array(ContainerAggregatorFactory::class, 'getDefault'),
-            self::class                      => array(ContainerServiceProviderFactory::class, 'getDefault'),
-            ServiceProviderAggregator::class => array(ServiceProviderAggregatorFactory::class, 'getDefault'),
+            Container::class                 => array(ContainerFactory::class, 'getInstance'),
+            ContainerAggregator::class       => array(ContainerAggregatorFactory::class, 'getInstance'),
+            self::class                      => array(ContainerServiceProviderFactory::class, 'getInstance'),
+            ServiceProviderAggregator::class => array(ServiceProviderAggregatorFactory::class, 'getInstance'),
         );
     }
 

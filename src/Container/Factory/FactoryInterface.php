@@ -13,20 +13,24 @@
 
 namespace CoiSA\Container\Factory;
 
-use CoiSA\Container\ServiceProvider\ContainerServiceProvider;
-
 /**
- * Class ContainerServiceProviderFactory
+ * Interface FactoryInterface
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerServiceProviderFactory extends AbstractFactory
+interface FactoryInterface
 {
     /**
-     * @return ContainerServiceProvider
+     * Create a new instance of an object.
+     *
+     * @return mixed
      */
-    public static function newInstance()
-    {
-        return new ContainerServiceProvider();
-    }
+    public static function newInstance();
+
+    /**
+     * Return a shared instance of an object.
+     *
+     * @return mixed
+     */
+    public static function getInstance();
 }

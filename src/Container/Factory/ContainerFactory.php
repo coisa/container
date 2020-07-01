@@ -21,26 +21,19 @@ use Interop\Container\ServiceProviderInterface;
  *
  * @package CoiSA\Container
  */
-final class ContainerFactory
+final class ContainerFactory extends AbstractFactory
 {
-    /**
-     * @var Container
-     */
-    private static $container;
-
     /**
      * @return Container
      */
-    public static function getDefault()
+    public static function newInstance()
     {
-        if (!static::$container) {
-            $serviceProviderAggregator = ServiceProviderAggregatorFactory::getDefault();
-            $serviceProviderAggregator->prepend(ContainerServiceProviderFactory::getDefault());
+        $containerServiceProvider  = ContainerServiceProviderFactory::getInstance();
+        $serviceProviderAggregator = ServiceProviderAggregatorFactory::getInstance();
 
-            static::$container = new Container($serviceProviderAggregator);
-        }
+        $serviceProviderAggregator->prepend($containerServiceProvider);
 
-        return static::$container;
+        return new Container($serviceProviderAggregator);
     }
 
     /**
@@ -50,6 +43,6 @@ final class ContainerFactory
      */
     public static function register(ServiceProviderInterface $serviceProvider)
     {
-        return static::getDefault()->register($serviceProvider);
+        return self::getInstance()->register($serviceProvider);
     }
 }

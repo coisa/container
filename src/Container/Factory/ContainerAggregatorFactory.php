@@ -21,24 +21,17 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerAggregatorFactory
+final class ContainerAggregatorFactory extends AbstractFactory
 {
-    /**
-     * @var ContainerAggregator
-     */
-    private static $containerAggregator;
-
     /**
      * @return ContainerAggregator
      */
-    public static function getDefault()
+    public static function newInstance()
     {
-        if (!static::$containerAggregator) {
-            static::$containerAggregator = new ContainerAggregator();
-            static::$containerAggregator->prepend(ContainerFactory::getDefault());
-        }
+        $container           = ContainerFactory::getInstance();
+        $containerAggregator = new ContainerAggregator();
 
-        return static::$containerAggregator;
+        return $containerAggregator->prepend($container);
     }
 
     /**
@@ -48,7 +41,7 @@ final class ContainerAggregatorFactory
      */
     public static function prepend(ContainerInterface $container)
     {
-        $containerAggregator = static::getDefault();
+        $containerAggregator = self::getInstance();
 
         return $containerAggregator->prepend($container);
     }
@@ -60,7 +53,7 @@ final class ContainerAggregatorFactory
      */
     public static function append(ContainerInterface $container)
     {
-        $containerAggregator = static::getDefault();
+        $containerAggregator = self::getInstance();
 
         return $containerAggregator->append($container);
     }
