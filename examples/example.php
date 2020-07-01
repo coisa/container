@@ -14,6 +14,7 @@
 use CoiSA\Container\Aggregator\ContainerAggregator;
 use CoiSA\Container\Aggregator\ServiceProviderAggregator;
 use CoiSA\Container\Container;
+use CoiSA\Container\Facade\ContainerFacade;
 use CoiSA\Container\Factory\ContainerAggregatorFactory;
 use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Container\Factory\ContainerServiceProviderFactory;
@@ -80,7 +81,7 @@ class B implements ServiceProviderInterface
 $container = ContainerFactory::getInstance();
 $container->register(new A());
 // or
-ContainerFactory::register(new B());
+ContainerFacade::register(new B());
 // or inside a factory
 $container->get(Container::class)->register(new B());
 

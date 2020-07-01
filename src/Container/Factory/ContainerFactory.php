@@ -14,7 +14,6 @@
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\Container;
-use Interop\Container\ServiceProviderInterface;
 
 /**
  * Class ContainerFactory
@@ -34,15 +33,5 @@ final class ContainerFactory extends AbstractFactory
         $serviceProviderAggregator->prepend($containerServiceProvider);
 
         return new Container($serviceProviderAggregator);
-    }
-
-    /**
-     * @param ServiceProviderInterface $serviceProvider
-     *
-     * @return Container
-     */
-    public static function register(ServiceProviderInterface $serviceProvider)
-    {
-        return self::getInstance()->register($serviceProvider);
     }
 }

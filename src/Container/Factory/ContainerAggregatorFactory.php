@@ -14,7 +14,6 @@
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\Aggregator\ContainerAggregator;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerAggregatorFactory
@@ -32,29 +31,5 @@ final class ContainerAggregatorFactory extends AbstractFactory
         $containerAggregator = new ContainerAggregator();
 
         return $containerAggregator->prepend($container);
-    }
-
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return ContainerAggregator
-     */
-    public static function prepend(ContainerInterface $container)
-    {
-        $containerAggregator = self::getInstance();
-
-        return $containerAggregator->prepend($container);
-    }
-
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return ContainerAggregator
-     */
-    public static function append(ContainerInterface $container)
-    {
-        $containerAggregator = self::getInstance();
-
-        return $containerAggregator->append($container);
     }
 }

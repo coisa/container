@@ -28,8 +28,8 @@ final class ContainerExceptionTest extends TestCase
         $exception          = new \Exception(\uniqid('exception', true), \mt_rand(1, 1000));
         $containerException = ContainerException::createFromExceptionForIdentifier($exception, \uniqid('id', true));
 
-        $this->assertInstanceOf('CoiSA\Container\Exception\ContainerException', $containerException);
-        $this->assertInstanceOf('Psr\Container\ContainerExceptionInterface', $containerException);
+        $this->assertInstanceOf('CoiSA\\Container\\Exception\\ContainerException', $containerException);
+        $this->assertInstanceOf('Psr\\Container\\ContainerExceptionInterface', $containerException);
         $this->assertSame($exception, $containerException->getPrevious());
     }
 }
