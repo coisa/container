@@ -50,7 +50,7 @@ final class Container implements ContainerInterface
      */
     public function has($id)
     {
-        return \is_callable($this->findFactory($id));
+        return \array_key_exists($id, $this->shared) || \is_callable($this->findFactory($id));
     }
 
     /**
