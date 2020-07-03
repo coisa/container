@@ -11,15 +11,11 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-use CoiSA\Container\Aggregator\ContainerAggregator;
-use CoiSA\Container\Aggregator\ServiceProviderAggregator;
-use CoiSA\Container\Container;
 use CoiSA\Container\Facade\ContainerFacade;
 use CoiSA\Container\Factory\ContainerAggregatorFactory;
 use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Container\Factory\ContainerServiceProviderFactory;
 use CoiSA\Container\Factory\ServiceProviderAggregatorFactory;
-use CoiSA\Container\ServiceProvider\ContainerServiceProvider;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -31,7 +27,7 @@ class A implements ServiceProviderInterface
     {
         return array(
             'a'  => array($this, 'getA'),
-            'sa' => array(self::class, 'getStaticA'),
+            'sa' => array('A', 'getStaticA'),
             'fa' => function (ContainerInterface $container) {
                 return 'fa';
             },
@@ -83,7 +79,7 @@ $container->register(new A());
 // or
 ContainerFacade::register(new B());
 // or inside a factory
-$container->get(Container::class)->register(new B());
+$container->get('CoiSA\\Container\\Container')->register(new B());
 
 \var_dump(
     $container->get('a'),
@@ -92,10 +88,10 @@ $container->get(Container::class)->register(new B());
 );
 
 \var_dump(
-    $container->get(ContainerAggregator::class) === ContainerAggregatorFactory::getInstance(),
-    $container->get(ContainerServiceProvider::class) === ContainerServiceProviderFactory::getInstance(),
-    $container->get(ServiceProviderAggregator::class) === ServiceProviderAggregatorFactory::getInstance(),
-    $container === $container->get(Container::class),
+    $container->get('CoiSA\\Container\\Aggregator\\ContainerAggregator') === ContainerAggregatorFactory::getInstance(),
+    $container->get('CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider') === ContainerServiceProviderFactory::getInstance(),
+    $container->get('CoiSA\\Container\\Aggregator\\ServiceProviderAggregator') === ServiceProviderAggregatorFactory::getInstance(),
+    $container === $container->get('CoiSA\\Container\\Container'),
     $container === ContainerFactory::getInstance()
 );
 

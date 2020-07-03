@@ -13,13 +13,6 @@
 
 namespace CoiSA\Container\ServiceProvider;
 
-use CoiSA\Container\Aggregator\ContainerAggregator;
-use CoiSA\Container\Aggregator\ServiceProviderAggregator;
-use CoiSA\Container\Container;
-use CoiSA\Container\Factory\ContainerAggregatorFactory;
-use CoiSA\Container\Factory\ContainerFactory;
-use CoiSA\Container\Factory\ContainerServiceProviderFactory;
-use CoiSA\Container\Factory\ServiceProviderAggregatorFactory;
 use Interop\Container\ServiceProviderInterface;
 
 /**
@@ -35,10 +28,22 @@ final class ContainerServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return array(
-            Container::class                 => array(ContainerFactory::class, 'getInstance'),
-            ContainerAggregator::class       => array(ContainerAggregatorFactory::class, 'getInstance'),
-            self::class                      => array(ContainerServiceProviderFactory::class, 'getInstance'),
-            ServiceProviderAggregator::class => array(ServiceProviderAggregatorFactory::class, 'getInstance'),
+            'CoiSA\\Container\\Container'                                 => array(
+                'CoiSA\\Container\\Factory\\ContainerFactory',
+                'getInstance'
+            ),
+            'CoiSA\\Container\\Aggregator\\ContainerAggregator'           => array(
+                'CoiSA\\Container\\Factory\\ContainerAggregatorFactory',
+                'getInstance'
+            ),
+            'CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider' => array(
+                'CoiSA\\Container\\Factory\\ContainerServiceProviderFactory',
+                'getInstance'
+            ),
+            'CoiSA\\Container\\Aggregator\\ServiceProviderAggregator'     => array(
+                'CoiSA\\Container\\Factory\\ServiceProviderAggregatorFactory',
+                'getInstance'
+            ),
         );
     }
 
