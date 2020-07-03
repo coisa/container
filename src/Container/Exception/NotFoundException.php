@@ -32,7 +32,7 @@ final class NotFoundException extends ContainerException implements NotFoundExce
      *
      * @return NotFoundException
      */
-    public static function createForIdentifier(string $id)
+    public static function createForIdentifier($id)
     {
         return new self(\sprintf(self::MESSAGE_TEMPLATE, $id));
     }

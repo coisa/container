@@ -32,7 +32,7 @@ class ContainerException extends \Exception implements ContainerExceptionInterfa
      *
      * @return ContainerException
      */
-    public static function createFromExceptionForIdentifier(\Exception $exception, string $id)
+    public static function createFromExceptionForIdentifier(\Exception $exception, $id)
     {
         return new self(
             \sprintf(self::MESSAGE_TEMPLATE, $exception->getMessage(), $id),
