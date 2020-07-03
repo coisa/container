@@ -28,11 +28,11 @@ final class ContainerServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return array(
-            'CoiSA\\Container\\Container'                                 => array(
+            'CoiSA\\Container\\Container' => array(
                 'CoiSA\\Container\\Factory\\ContainerFactory',
                 'getInstance'
             ),
-            'CoiSA\\Container\\Aggregator\\ContainerAggregator'           => array(
+            'CoiSA\\Container\\Aggregator\\ContainerAggregator' => array(
                 'CoiSA\\Container\\Factory\\ContainerAggregatorFactory',
                 'getInstance'
             ),
@@ -40,7 +40,7 @@ final class ContainerServiceProvider implements ServiceProviderInterface
                 'CoiSA\\Container\\Factory\\ContainerServiceProviderFactory',
                 'getInstance'
             ),
-            'CoiSA\\Container\\Aggregator\\ServiceProviderAggregator'     => array(
+            'CoiSA\\Container\\Aggregator\\ServiceProviderAggregator' => array(
                 'CoiSA\\Container\\Factory\\ServiceProviderAggregatorFactory',
                 'getInstance'
             ),
