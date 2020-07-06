@@ -19,7 +19,7 @@
         <whitelist processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">src</directory>
             <exclude>
-                <file phpVersion="5.6.0" phpVersionOperator="&lt;">src/ContainerAwareTrait.php</file>
+                <file phpVersion="5.4.0" phpVersionOperator="&lt;">src/ContainerAwareTrait.php</file>
             </exclude>
         </whitelist>
     </filter>
