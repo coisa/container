@@ -30,19 +30,19 @@ final class ContainerServiceProvider implements ServiceProviderInterface
         return array(
             'CoiSA\\Container\\Container' => array(
                 'CoiSA\\Container\\Factory\\ContainerFactory',
-                'getInstance'
+                'factory'
             ),
             'CoiSA\\Container\\Aggregator\\ContainerAggregator' => array(
                 'CoiSA\\Container\\Factory\\ContainerAggregatorFactory',
-                'getInstance'
+                'factory'
             ),
             'CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider' => array(
                 'CoiSA\\Container\\Factory\\ContainerServiceProviderFactory',
-                'getInstance'
+                'factory'
             ),
             'CoiSA\\Container\\Aggregator\\ServiceProviderAggregator' => array(
                 'CoiSA\\Container\\Factory\\ServiceProviderAggregatorFactory',
-                'getInstance'
+                'factory'
             ),
         );
     }

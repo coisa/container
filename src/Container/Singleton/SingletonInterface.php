@@ -11,21 +11,19 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container\Factory;
-
-use CoiSA\Container\ContainerInterface;
+namespace CoiSA\Container\Singleton;
 
 /**
- * Interface FactoryInterface
+ * Interface SingletonInterface
  *
  * @package CoiSA\Container\Factory
  */
-interface FactoryInterface
+interface SingletonInterface
 {
     /**
      * Return a shared instance of an object.
      *
      * @return mixed
      */
-    public function factory(ContainerInterface $container);
+    public static function getInstance();
 }

@@ -11,19 +11,29 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container\Facade;
+namespace CoiSA\Container\Singleton;
 
 use CoiSA\Container\Aggregator\ContainerAggregator;
-use CoiSA\Container\Factory\ContainerAggregatorFactory;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class ContainerAggregatorFacade
+ * Class ContainerAggregatorSingleton
  *
- * @package CoiSA\Container\Facade
+ * @package CoiSA\Container\Singleton
  */
-final class ContainerAggregatorFacade
+final class ContainerAggregatorSingleton extends AbstractSingleton
 {
+    /**
+     * @return ContainerAggregator
+     */
+    protected static function newInstance()
+    {
+        $container           = ContainerSingleton::getInstance();
+        $containerAggregator = new ContainerAggregator();
+
+        return $containerAggregator->prepend($container);
+    }
+
     /**
      * @param ContainerInterface $container
      *
@@ -31,7 +41,7 @@ final class ContainerAggregatorFacade
      */
     public static function prepend(ContainerInterface $container)
     {
-        return ContainerAggregatorFactory::getInstance()->prepend($container);
+        return self::getInstance()->prepend($container);
     }
 
     /**
@@ -41,6 +51,6 @@ final class ContainerAggregatorFacade
      */
     public static function append(ContainerInterface $container)
     {
-        return ContainerAggregatorFactory::getInstance()->append($container);
+        return self::getInstance()->append($container);
     }
 }

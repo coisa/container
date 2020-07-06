@@ -11,11 +11,10 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-use CoiSA\Container\Facade\ContainerFacade;
-use CoiSA\Container\Factory\ContainerAggregatorFactory;
-use CoiSA\Container\Factory\ContainerFactory;
-use CoiSA\Container\Factory\ContainerServiceProviderFactory;
-use CoiSA\Container\Factory\ServiceProviderAggregatorFactory;
+use CoiSA\Container\Singleton\ContainerAggregatorSingleton;
+use CoiSA\Container\Singleton\ContainerServiceProviderSingleton;
+use CoiSA\Container\Singleton\ContainerSingleton;
+use CoiSA\Container\Singleton\ServiceProviderAggregatorSingleton;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -74,10 +73,10 @@ class B implements ServiceProviderInterface
     }
 }
 
-$container = ContainerFactory::getInstance();
+$container = ContainerSingleton::getInstance();
 $container->register(new A());
 // or
-ContainerFacade::register(new B());
+ContainerSingleton::register(new B());
 // or inside a factory
 $container->get('CoiSA\\Container\\Container')->register(new B());
 
@@ -88,11 +87,11 @@ $container->get('CoiSA\\Container\\Container')->register(new B());
 );
 
 \var_dump(
-    $container->get('CoiSA\\Container\\Aggregator\\ContainerAggregator') === ContainerAggregatorFactory::getInstance(),
-    $container->get('CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider') === ContainerServiceProviderFactory::getInstance(),
-    $container->get('CoiSA\\Container\\Aggregator\\ServiceProviderAggregator') === ServiceProviderAggregatorFactory::getInstance(),
+    $container->get('CoiSA\\Container\\Aggregator\\ContainerAggregator') === ContainerAggregatorSingleton::getInstance(),
+    $container->get('CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider') === ContainerServiceProviderSingleton::getInstance(),
+    $container->get('CoiSA\\Container\\Aggregator\\ServiceProviderAggregator') === ServiceProviderAggregatorSingleton::getInstance(),
     $container === $container->get('CoiSA\\Container\\Container'),
-    $container === ContainerFactory::getInstance()
+    $container === ContainerSingleton::getInstance()
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);

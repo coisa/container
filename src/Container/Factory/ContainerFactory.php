@@ -14,24 +14,21 @@
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\Container;
+use CoiSA\Container\ContainerInterface;
+use CoiSA\Container\Singleton\ContainerSingleton;
 
 /**
  * Class ContainerFactory
  *
  * @package CoiSA\Container
  */
-final class ContainerFactory extends AbstractFactory
+final class ContainerFactory implements FactoryInterface
 {
     /**
      * @return Container
      */
-    public static function newInstance()
+    public function factory(ContainerInterface $container)
     {
-        $containerServiceProvider  = ContainerServiceProviderFactory::getInstance();
-        $serviceProviderAggregator = ServiceProviderAggregatorFactory::getInstance();
-
-        $serviceProviderAggregator->prepend($containerServiceProvider);
-
-        return new Container($serviceProviderAggregator);
+        return ContainerSingleton::getInstance();
     }
 }

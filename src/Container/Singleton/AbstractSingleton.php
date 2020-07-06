@@ -11,14 +11,14 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container\Factory;
+namespace CoiSA\Container\Singleton;
 
 /**
- * Class AbstractFactory
+ * Class AbstractSingleton
  *
  * @package CoiSA\Container\Factory
  */
-abstract class AbstractFactory implements FactoryInterface
+abstract class AbstractSingleton implements SingletonInterface
 {
     /**
      * @var array<object>
@@ -26,7 +26,14 @@ abstract class AbstractFactory implements FactoryInterface
     private static $instance = array();
 
     /**
+     * Create a new instance of an object.
+     *
      * @return mixed
+     */
+    abstract protected static function newInstance();
+
+    /**
+     * {@inheritDoc}
      */
     public static function getInstance()
     {

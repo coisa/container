@@ -11,19 +11,31 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace CoiSA\Container\Facade;
+namespace CoiSA\Container\Singleton;
 
 use CoiSA\Container\Container;
-use CoiSA\Container\Factory\ContainerFactory;
 use Interop\Container\ServiceProviderInterface;
 
 /**
- * Class ContainerFacade
+ * Class ContainerSingleton
  *
- * @package CoiSA\Container\Facade
+ * @package CoiSA\Container\Singleton
  */
-final class ContainerFacade
+final class ContainerSingleton extends AbstractSingleton
 {
+    /**
+     * @return Container
+     */
+    public static function newInstance()
+    {
+        $containerServiceProvider  = ContainerServiceProviderSingleton::getInstance();
+        $serviceProviderAggregator = ServiceProviderAggregatorSingleton::getInstance();
+
+        $serviceProviderAggregator->prepend($containerServiceProvider);
+
+        return new Container($serviceProviderAggregator);
+    }
+
     /**
      * @param ServiceProviderInterface $serviceProvider
      *
@@ -31,6 +43,6 @@ final class ContainerFacade
      */
     public static function register(ServiceProviderInterface $serviceProvider)
     {
-        return ContainerFactory::getInstance()->register($serviceProvider);
+        return self::getInstance()->register($serviceProvider);
     }
 }
