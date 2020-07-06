@@ -24,17 +24,6 @@ use Psr\Container\ContainerInterface;
 final class ContainerAggregatorSingleton extends AbstractSingleton
 {
     /**
-     * @return ContainerAggregator
-     */
-    protected static function newInstance()
-    {
-        $container           = ContainerSingleton::getInstance();
-        $containerAggregator = new ContainerAggregator();
-
-        return $containerAggregator->prepend($container);
-    }
-
-    /**
      * @param ContainerInterface $container
      *
      * @return ContainerAggregator
@@ -52,5 +41,15 @@ final class ContainerAggregatorSingleton extends AbstractSingleton
     public static function append(ContainerInterface $container)
     {
         return self::getInstance()->append($container);
+    }
+
+    /**
+     * @return ContainerAggregator
+     */
+    protected static function newInstance()
+    {
+        $container = ContainerSingleton::getInstance();
+
+        return new ContainerAggregator(array($container));
     }
 }

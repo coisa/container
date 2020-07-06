@@ -13,16 +13,16 @@
 
 namespace CoiSA\Container\Factory;
 
-use CoiSA\Container\ContainerInterface;
 use CoiSA\Container\ServiceProvider\ContainerServiceProvider;
 use CoiSA\Container\Singleton\ContainerServiceProviderSingleton;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerServiceProviderFactory
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerServiceProviderFactory implements FactoryInterface
+final class ContainerServiceProviderFactory extends AbstractFactory
 {
     /**
      * @return ContainerServiceProvider

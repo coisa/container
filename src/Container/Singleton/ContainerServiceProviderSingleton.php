@@ -23,14 +23,6 @@ use CoiSA\Container\ServiceProvider\ContainerServiceProvider;
 final class ContainerServiceProviderSingleton extends AbstractSingleton
 {
     /**
-     * @return ContainerServiceProvider
-     */
-    protected static function newInstance()
-    {
-        return new ContainerServiceProvider();
-    }
-
-    /**
      * @return callable[]
      */
     public static function getFactories()
@@ -44,5 +36,13 @@ final class ContainerServiceProviderSingleton extends AbstractSingleton
     public static function getExtensions()
     {
         return self::getInstance()->getExtensions();
+    }
+
+    /**
+     * @return ContainerServiceProvider
+     */
+    protected static function newInstance()
+    {
+        return new ContainerServiceProvider();
     }
 }

@@ -13,19 +13,21 @@
 
 namespace CoiSA\Container\Factory;
 
-use CoiSA\Container\Container;
-use CoiSA\Container\ContainerInterface;
+use CoiSA\Container\Aggregator\ContainerAggregator;
 use CoiSA\Container\Singleton\ContainerAggregatorSingleton;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerAggregatorFactory
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerAggregatorFactory implements FactoryInterface
+final class ContainerAggregatorFactory extends AbstractFactory
 {
     /**
-     * @return Container
+     * @param ContainerInterface $container
+     *
+     * @return ContainerAggregator
      */
     public function factory(ContainerInterface $container)
     {

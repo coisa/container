@@ -24,14 +24,6 @@ use Interop\Container\ServiceProviderInterface;
 final class ServiceProviderAggregatorSingleton extends AbstractSingleton
 {
     /**
-     * @return ServiceProviderAggregator
-     */
-    protected static function newInstance()
-    {
-        return new ServiceProviderAggregator();
-    }
-
-    /**
      * @param ServiceProviderInterface $container
      *
      * @return ServiceProviderAggregator
@@ -49,5 +41,15 @@ final class ServiceProviderAggregatorSingleton extends AbstractSingleton
     public static function append(ServiceProviderInterface $container)
     {
         return self::getInstance()->append($container);
+    }
+
+    /**
+     * @return ServiceProviderAggregator
+     */
+    protected static function newInstance()
+    {
+        $containerServiceProvider = ContainerServiceProviderSingleton::getInstance();
+
+        return new ServiceProviderAggregator(array($containerServiceProvider));
     }
 }

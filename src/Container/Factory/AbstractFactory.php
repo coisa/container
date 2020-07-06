@@ -13,19 +13,22 @@
 
 namespace CoiSA\Container\Factory;
 
-use Psr\Container\ContainerInterface;
+use CoiSA\Container\ContainerInterface;
 
 /**
- * Interface FactoryInterface
+ * Class AbstractFactory
  *
  * @package CoiSA\Container\Factory
  */
-interface FactoryInterface
+abstract class AbstractFactory implements FactoryInterface
 {
     /**
-     * Return a shared instance of an object.
+     * @param ContainerInterface $container
      *
      * @return mixed
      */
-    public function factory(ContainerInterface $container);
+    public function __invoke(ContainerInterface $container)
+    {
+        return $this->factory($container);
+    }
 }

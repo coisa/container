@@ -26,13 +26,6 @@ abstract class AbstractSingleton implements SingletonInterface
     private static $instance = array();
 
     /**
-     * Create a new instance of an object.
-     *
-     * @return mixed
-     */
-    abstract protected static function newInstance();
-
-    /**
      * {@inheritDoc}
      */
     public static function getInstance()
@@ -46,4 +39,11 @@ abstract class AbstractSingleton implements SingletonInterface
 
         return self::$instance[$className];
     }
+
+    /**
+     * Create a new instance of an object.
+     *
+     * @return mixed
+     */
+    abstract protected static function newInstance();
 }

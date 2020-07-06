@@ -14,17 +14,19 @@
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\Aggregator\ServiceProviderAggregator;
-use CoiSA\Container\ContainerInterface;
 use CoiSA\Container\Singleton\ServiceProviderAggregatorSingleton;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ServiceProviderAggregatorFactory
  *
  * @package CoiSA\Container\Factory
  */
-final class ServiceProviderAggregatorFactory implements FactoryInterface
+final class ServiceProviderAggregatorFactory extends AbstractFactory
 {
     /**
+     * @param ContainerInterface $container
+     *
      * @return ServiceProviderAggregator
      */
     public function factory(ContainerInterface $container)
