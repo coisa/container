@@ -14,24 +14,24 @@
 namespace CoiSA\Container\Aggregator;
 
 use CoiSA\Container\Exception;
-use Psr\Container\ContainerInterface as PsrContainer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerAggregator
  *
  * @package CoiSA\Container\Aggregator
  */
-final class ContainerAggregator implements PsrContainer
+final class ContainerAggregator implements ContainerInterface
 {
     /**
-     * @var array<PsrContainer>
+     * @var array<ContainerInterface>
      */
     private $containers = array();
 
     /**
      * ContainerAggregator constructor.
      *
-     * @param array<PsrContainer> $containers
+     * @param array<ContainerInterface> $containers
      */
     public function __construct(array $containers = array())
     {
@@ -41,11 +41,19 @@ final class ContainerAggregator implements PsrContainer
     }
 
     /**
-     * @param PsrContainer $container
+     * @return array
+     */
+    public function getContainers(): array
+    {
+        return $this->containers;
+    }
+
+    /**
+     * @param ContainerInterface $container
      *
      * @return self
      */
-    public function prepend(PsrContainer $container)
+    public function prepend(ContainerInterface $container)
     {
         \array_unshift($this->containers, $container);
 
@@ -53,11 +61,11 @@ final class ContainerAggregator implements PsrContainer
     }
 
     /**
-     * @param PsrContainer $container
+     * @param ContainerInterface $container
      *
      * @return self
      */
-    public function append(PsrContainer $container)
+    public function append(ContainerInterface $container)
     {
         $this->containers[] = $container;
 
@@ -73,7 +81,7 @@ final class ContainerAggregator implements PsrContainer
     {
         return \array_reduce($this->containers, function ($has, $container) use ($id) {
             return $has || $container->has($id);
-        });
+        }, false);
     }
 
     /**

@@ -27,7 +27,7 @@ final class NotFoundExceptionTest extends TestCase
     {
         $notFoundException = NotFoundException::createForIdentifier(\uniqid('id', true));
 
-        $this->assertInstanceOf('CoiSA\\Container\\Exception\\NotFoundException', $notFoundException);
-        $this->assertInstanceOf('Psr\\Container\\NotFoundExceptionInterface', $notFoundException);
+        self::assertInstanceOf('CoiSA\\Container\\Exception\\NotFoundException', $notFoundException);
+        self::assertInstanceOf('Psr\\Container\\NotFoundExceptionInterface', $notFoundException);
     }
 }

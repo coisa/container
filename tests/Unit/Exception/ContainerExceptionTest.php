@@ -26,10 +26,13 @@ final class ContainerExceptionTest extends TestCase
     public function testCreateFromExceptionForIdentifierWillReturnContainerExceptionWithGivenPreviousException()
     {
         $exception          = new \Exception(\uniqid('exception', true), \mt_rand(1, 1000));
-        $containerException = ContainerException::createFromExceptionForIdentifier($exception, \uniqid('id', true));
+        $containerException = ContainerException::createFromExceptionForIdentifier(
+            $exception,
+            \uniqid('id', true)
+        );
 
-        $this->assertInstanceOf('CoiSA\\Container\\Exception\\ContainerException', $containerException);
-        $this->assertInstanceOf('Psr\\Container\\ContainerExceptionInterface', $containerException);
-        $this->assertSame($exception, $containerException->getPrevious());
+        self::assertInstanceOf('CoiSA\\Container\\Exception\\ContainerException', $containerException);
+        self::assertInstanceOf('Psr\\Container\\ContainerExceptionInterface', $containerException);
+        self::assertSame($exception, $containerException->getPrevious());
     }
 }
