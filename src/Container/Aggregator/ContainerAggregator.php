@@ -43,7 +43,7 @@ final class ContainerAggregator implements ContainerInterface
     /**
      * @return array
      */
-    public function getContainers(): array
+    public function getContainers()
     {
         return $this->containers;
     }
