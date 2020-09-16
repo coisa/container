@@ -11,10 +11,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-use CoiSA\Container\Singleton\ContainerAggregatorSingleton;
-use CoiSA\Container\Singleton\ContainerServiceProviderSingleton;
-use CoiSA\Container\Singleton\ContainerSingleton;
-use CoiSA\Container\Singleton\ServiceProviderAggregatorSingleton;
+use CoiSA\Container\Aggregator\ContainerAggregator;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -73,25 +70,14 @@ class B implements ServiceProviderInterface
     }
 }
 
-$container = ContainerSingleton::getInstance();
+$container = new CoiSA\Container\Container();
 $container->register(new A());
-// or
-ContainerSingleton::register(new B());
-// or inside a factory
-$container->get('CoiSA\\Container\\Container')->register(new B());
+$container->register(new B());
 
 \var_dump(
     $container->get('a'),
     $container->get('sa'),
     $container->get('fa')
-);
-
-\var_dump(
-    $container->get('CoiSA\\Container\\Aggregator\\ContainerAggregator') === ContainerAggregatorSingleton::getInstance(),
-    $container->get('CoiSA\\Container\\ServiceProvider\\ContainerServiceProvider') === ContainerServiceProviderSingleton::getInstance(),
-    $container->get('CoiSA\\Container\\Aggregator\\ServiceProviderAggregator') === ServiceProviderAggregatorSingleton::getInstance(),
-    $container === $container->get('CoiSA\\Container\\Container'),
-    $container === ContainerSingleton::getInstance()
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);

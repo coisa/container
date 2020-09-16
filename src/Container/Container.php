@@ -13,8 +13,7 @@
 
 namespace CoiSA\Container;
 
-use CoiSA\Container\Aggregator\ServiceProviderAggregator;
-use CoiSA\Container\Singleton\ServiceProviderAggregatorSingleton;
+use CoiSA\ServiceProvider\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
 
 /**
@@ -37,12 +36,11 @@ final class Container implements ContainerInterface
     /**
      * Container constructor.
      *
-     * @param null|ServiceProviderAggregator $serviceProviderAggregator
+     * @param array<ServiceProviderInterface> $serviceProviders
      */
-    public function __construct(ServiceProviderAggregator $serviceProviderAggregator = null)
+    public function __construct(array $serviceProviders = array())
     {
-        $this->serviceProviderAggregator = $serviceProviderAggregator
-            ?: ServiceProviderAggregatorSingleton::getInstance();
+        $this->serviceProviderAggregator = new ServiceProviderAggregator($serviceProviders);
     }
 
     /**
