@@ -11,7 +11,6 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-use CoiSA\Container\Aggregator\ContainerAggregator;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -24,7 +23,7 @@ class A implements ServiceProviderInterface
         return array(
             'a'  => array($this, 'getA'),
             'sa' => array('A', 'getStaticA'),
-            'fa' => function (ContainerInterface $container) {
+            'fa' => function(ContainerInterface $container) {
                 return 'fa';
             },
         );
@@ -43,11 +42,11 @@ class A implements ServiceProviderInterface
     public function getExtensions()
     {
         return array(
-            'a' => function (ContainerInterface $container, $previous) {
+            'a' => function(ContainerInterface $container, $previous) {
                 \var_dump($previous);
 
                 return 'a';
-            }
+            },
         );
     }
 }
@@ -61,11 +60,11 @@ class B implements ServiceProviderInterface
     public function getExtensions()
     {
         return array(
-            'a' => function (ContainerInterface $container, $previous) {
+            'a' => function(ContainerInterface $container, $previous) {
                 \var_dump($previous);
 
                 return $previous . 'b';
-            }
+            },
         );
     }
 }
