@@ -86,8 +86,6 @@ final class ContainerAggregator implements ContainerInterface
     /**
      * @param string $id
      *
-     * @throws Exception\NotFoundException
-     *
      * @return mixed
      */
     public function get($id)
