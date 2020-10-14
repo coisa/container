@@ -109,6 +109,8 @@ final class Container implements ContainerInterface
             return \call_user_func($extension, $this, $instance);
         } catch (ServiceProviderExceptionInterface $serviceProviderException) {
             return $instance;
+        } catch (\Exception $exception) {
+            throw ContainerException::forExceptionResolvingIdentifier($exception, $id);
         }
     }
 }
