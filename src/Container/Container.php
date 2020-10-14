@@ -87,9 +87,6 @@ final class Container implements ContainerInterface
     /**
      * @param string $id
      *
-     * @throws Exception\NotFoundException
-     * @throws Exception\ContainerException
-     *
      * @return mixed
      */
     private function resolve($id)
@@ -109,11 +106,9 @@ final class Container implements ContainerInterface
         try {
             $extension = $this->serviceProviderAggregator->getExtension($id);
 
-            return $extension($this, $instance);
+            return \call_user_func($extension, $this, $instance);
         } catch (ServiceProviderExceptionInterface $serviceProviderException) {
-            // noop
+            return $instance;
         }
-
-        return $instance;
     }
 }
