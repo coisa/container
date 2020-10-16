@@ -16,6 +16,7 @@ namespace CoiSA\Container;
 use CoiSA\Exception\Container\ContainerException;
 use CoiSA\Exception\Container\NotFoundException;
 use CoiSA\ServiceProvider\Exception\ServiceProviderExceptionInterface;
+use CoiSA\ServiceProvider\ServiceProvider;
 use CoiSA\ServiceProvider\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
 
@@ -32,6 +33,11 @@ final class Container implements ContainerInterface
     private $serviceProviderAggregator;
 
     /**
+     * @var ServiceProvider
+     */
+    private $serviceProvider;
+
+    /**
      * @var mixed[]
      */
     private $instances = array();
@@ -43,7 +49,10 @@ final class Container implements ContainerInterface
      */
     public function __construct(array $serviceProviders = array())
     {
+        $this->serviceProvider           = new ServiceProvider();
         $this->serviceProviderAggregator = new ServiceProviderAggregator($serviceProviders);
+
+        $this->serviceProviderAggregator->append($this->serviceProvider);
     }
 
     /**
@@ -76,6 +85,19 @@ final class Container implements ContainerInterface
         }
 
         return $this->instances[$id];
+    }
+
+    /**
+     * @param string                                                                  $id
+     * @param callable|\CoiSA\ServiceProvider\Factory\ServiceProviderFactoryInterface $factory
+     *
+     * @return $this
+     */
+    public function set($id, $factory)
+    {
+        $this->serviceProvider->setFactory($id, $factory);
+
+        return $this;
     }
 
     /**
