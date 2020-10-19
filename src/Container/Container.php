@@ -7,10 +7,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
+ *
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\Container;
 
 use CoiSA\Exception\Container\ContainerException;
@@ -20,7 +20,7 @@ use CoiSA\ServiceProvider\ServiceProviderAggregator;
 use Interop\Container\ServiceProviderInterface;
 
 /**
- * Class Container
+ * Class Container.
  *
  * @package CoiSA\Container
  */
@@ -47,7 +47,7 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @return bool
      */

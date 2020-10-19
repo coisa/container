@@ -7,10 +7,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
+ *
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
@@ -80,3 +80,9 @@ $container->register(new B());
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);
+
+$container['test'] = function() {
+    return \uniqid('test', true);
+};
+
+\var_dump($container['test']);
