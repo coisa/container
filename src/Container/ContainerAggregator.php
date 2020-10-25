@@ -13,6 +13,9 @@
  */
 namespace CoiSA\Container;
 
+use CoiSA\Exception\Container\ContainerException;
+use CoiSA\Exception\Container\NotFoundException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -91,11 +94,15 @@ final class ContainerAggregator implements ContainerInterface
     public function get($id)
     {
         if (!$this->has($id)) {
-            throw Exception\NotFoundException::createForIdentifier($id);
+            throw NotFoundException::forNotFoundIdentifierFactory($id);
         }
 
         return \array_reduce($this->containers, function($object, $container) use ($id) {
-            return $object || ($container->has($id) ? $container->get($id) : false);
+            try {
+                return $object || ($container->has($id) ? $container->get($id) : false);
+            } catch (ContainerExceptionInterface $containerException) {
+                throw ContainerException::forExceptionResolvingIdentifier($containerException, $id);
+            }
         });
     }
 }
