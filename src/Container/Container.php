@@ -67,7 +67,7 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($id)
     {
@@ -92,7 +92,7 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function register(ServiceProviderInterface $serviceProvider)
     {
