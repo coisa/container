@@ -80,9 +80,3 @@ $container->register(new B());
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);
-
-$container['test'] = function() {
-    return \uniqid('test', true);
-};
-
-\var_dump($container['test']);
