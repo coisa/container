@@ -15,9 +15,8 @@ namespace CoiSA\Container;
 
 use CoiSA\Exception\Container\ContainerException;
 use CoiSA\Exception\Container\NotFoundException;
-use CoiSA\ServiceProvider\Exception\ServiceProviderExceptionInterface;
 use CoiSA\ServiceProvider\AggregateServiceProvider;
-use CoiSA\ServiceProvider\Factory\ServiceFactory;
+use CoiSA\ServiceProvider\Exception\ServiceProviderExceptionInterface;
 use Interop\Container\ServiceProviderInterface;
 
 /**
