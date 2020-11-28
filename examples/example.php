@@ -11,72 +11,32 @@
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+
+use CoiSA\Container\Factory\ContainerFactory;
+use CoiSA\Container\Test\Stub\ServiceProvider\ExampleServiceProvider;
+use CoiSA\Container\Test\Stub\ServiceProvider\ExampleOtherServiceProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class A implements ServiceProviderInterface
-{
-    public function getFactories()
-    {
-        return array(
-            'a'  => array($this, 'getA'),
-            'sa' => array('A', 'getStaticA'),
-            'fa' => function(ContainerInterface $container) {
-                return 'fa';
-            },
-        );
-    }
+$exampleServiceProvider = new ExampleServiceProvider();
+$otherServiceProvider   = new ExampleOtherServiceProvider();
 
-    public function getA(ContainerInterface $container)
-    {
-        return 'a';
-    }
-
-    public function getStaticA(ContainerInterface $container)
-    {
-        return 'sa';
-    }
-
-    public function getExtensions()
-    {
-        return array(
-            'a' => function(ContainerInterface $container, $previous) {
-                \var_dump($previous);
-
-                return 'a';
-            },
-        );
-    }
-}
-class B implements ServiceProviderInterface
-{
-    public function getFactories()
-    {
-        return array();
-    }
-
-    public function getExtensions()
-    {
-        return array(
-            'a' => function(ContainerInterface $container, $previous) {
-                \var_dump($previous);
-
-                return $previous . 'b';
-            },
-        );
-    }
-}
-
-$container = new CoiSA\Container\Container();
-$container->register(new A());
-$container->register(new B());
+$containerFactory = new ContainerFactory();
+$container = $containerFactory->create(
+    $exampleServiceProvider,
+    $otherServiceProvider
+);
 
 \var_dump(
-    $container->get('a'),
-    $container->get('sa'),
-    $container->get('fa')
+    // ExampleServiceProvider
+    $container->has('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'),
+    $exampleServiceProvider === $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'),
+    $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'),
+
+    // ExampleOtherServiceProvider
+    $container->has('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider'),
+    $otherServiceProvider === $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider'),
+    $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider')
 );
 
 \var_dump(\memory_get_peak_usage(true) / 1024 / 1024);

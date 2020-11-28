@@ -19,11 +19,11 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class ContainerAggregator.
+ * Class AggregateContainer.
  *
  * @package CoiSA\Container
  */
-final class ContainerAggregator implements ContainerInterface
+final class AggregateContainer implements ContainerInterface, \IteratorAggregate
 {
     /**
      * @var array<ContainerInterface>
@@ -31,7 +31,7 @@ final class ContainerAggregator implements ContainerInterface
     private $containers = array();
 
     /**
-     * ContainerAggregator constructor.
+     * AggregateContainer constructor.
      *
      * @param array<ContainerInterface> $containers
      */
@@ -48,6 +48,14 @@ final class ContainerAggregator implements ContainerInterface
     public function getContainers()
     {
         return $this->containers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->containers);
     }
 
     /**

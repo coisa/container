@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.3",
         "coisa/exceptions": "^1.0",
-        "coisa/service-provider": "^1.0",
+        "coisa/factory": "^1.2",
+        "coisa/service-provider": "^1.1",
         "container-interop/service-provider": "^0.4.0",
         "psr/container": "^1.0"
     },
@@ -38,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "CoiSA\\Container\\": "src/Container"
+            "CoiSA\\Container\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CoiSA\\Container\\Test\\": "tests/"
+            "CoiSA\\Container\\Test\\": "tests"
         }
     },
     "minimum-stability": "stable",

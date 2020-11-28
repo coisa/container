@@ -16,7 +16,8 @@ namespace CoiSA\Container;
 use CoiSA\Exception\Container\ContainerException;
 use CoiSA\Exception\Container\NotFoundException;
 use CoiSA\ServiceProvider\Exception\ServiceProviderExceptionInterface;
-use CoiSA\ServiceProvider\ServiceProviderAggregator;
+use CoiSA\ServiceProvider\AggregateServiceProvider;
+use CoiSA\ServiceProvider\Factory\ServiceFactory;
 use Interop\Container\ServiceProviderInterface;
 
 /**
@@ -27,9 +28,9 @@ use Interop\Container\ServiceProviderInterface;
 final class Container implements ContainerInterface
 {
     /**
-     * @var ServiceProviderAggregator
+     * @var AggregateServiceProvider
      */
-    private $serviceProviderAggregator;
+    private $aggregateServiceProvider;
 
     /**
      * @var mixed[]
@@ -39,11 +40,11 @@ final class Container implements ContainerInterface
     /**
      * Container constructor.
      *
-     * @param array<ServiceProviderInterface> $serviceProviders
+     * @param AggregateServiceProvider $aggregateServiceProvider
      */
-    public function __construct(array $serviceProviders = array())
+    public function __construct(AggregateServiceProvider $aggregateServiceProvider)
     {
-        $this->serviceProviderAggregator = new ServiceProviderAggregator($serviceProviders);
+        $this->aggregateServiceProvider = $aggregateServiceProvider;
     }
 
     /**
@@ -58,7 +59,7 @@ final class Container implements ContainerInterface
         }
 
         try {
-            $this->serviceProviderAggregator->getFactory($id);
+            $this->aggregateServiceProvider->getFactory($id);
         } catch (ServiceProviderExceptionInterface $serviceProviderException) {
             return false;
         }
@@ -86,7 +87,7 @@ final class Container implements ContainerInterface
      */
     public function set($id, $factory)
     {
-        $this->serviceProviderAggregator->setFactory($id, $factory);
+        $this->aggregateServiceProvider->setFactory($id, $factory);
 
         return $this;
     }
@@ -96,7 +97,7 @@ final class Container implements ContainerInterface
      */
     public function register(ServiceProviderInterface $serviceProvider)
     {
-        $this->serviceProviderAggregator->append($serviceProvider);
+        $this->aggregateServiceProvider->append($serviceProvider);
 
         return $this;
     }
@@ -109,7 +110,7 @@ final class Container implements ContainerInterface
     private function resolve($id)
     {
         try {
-            $factory = $this->serviceProviderAggregator->getFactory($id);
+            $factory = $this->aggregateServiceProvider->getFactory($id);
         } catch (ServiceProviderExceptionInterface $serviceProviderException) {
             throw NotFoundException::forNotFoundIdentifierFactory($id);
         }
@@ -121,7 +122,7 @@ final class Container implements ContainerInterface
         }
 
         try {
-            $extension = $this->serviceProviderAggregator->getExtension($id);
+            $extension = $this->aggregateServiceProvider->getExtension($id);
 
             return \call_user_func($extension, $this, $instance);
         } catch (ServiceProviderExceptionInterface $serviceProviderException) {
