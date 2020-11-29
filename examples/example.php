@@ -28,20 +28,21 @@ $container = AbstractFactory::create(
 
 \var_dump(
     // ExampleServiceProvider
-    $container->has('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'),
-    $exampleServiceProvider === $container->get(
-        'CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'
-    ),
-    $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'),
+    $container->has(\get_class($exampleServiceProvider)),
+    $exampleServiceProvider === $container->get(\get_class($exampleServiceProvider)),
+    $container->get(\get_class($exampleServiceProvider)),
 
     // ExampleOtherServiceProvider
-    $container->has('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider'),
-    $otherServiceProvider === $container->get(
-        'CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider'
-    ),
-    $container->get('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleOtherServiceProvider')
+    $container->has(\get_class($otherServiceProvider)),
+    $otherServiceProvider === $container->get(\get_class($otherServiceProvider)),
+    $container->get(\get_class($otherServiceProvider))
 );
 
-var_dump(AbstractFactory::getFactory('CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider'));
+\var_dump(
+    AbstractFactory::getFactory(\get_class($exampleServiceProvider)) instanceof CoiSA\Factory\ContainerFactory,
+    AbstractFactory::getFactory(\get_class($exampleServiceProvider))
+);
 
-\var_dump(\memory_get_peak_usage(true) / 1024 / 1024);
+\var_dump(
+    \memory_get_peak_usage(true) / 1024 / 1024
+);
