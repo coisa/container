@@ -14,6 +14,7 @@
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\AggregateContainer;
+use CoiSA\Factory\AbstractFactory;
 use CoiSA\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -29,8 +30,11 @@ final class AggregateContainerFactory implements FactoryInterface
      */
     public function create()
     {
-        $containers = \func_get_args();
+        $containers         = \func_get_args();
+        $aggregateContainer = new AggregateContainer($containers);
 
-        return new AggregateContainer($containers);
+        AbstractFactory::setContainer($aggregateContainer);
+
+        return $aggregateContainer;
     }
 }
