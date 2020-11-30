@@ -15,6 +15,7 @@ namespace CoiSA\Container;
 
 use CoiSA\Exception\Container\ContainerException;
 use CoiSA\Exception\Container\NotFoundException;
+use CoiSA\Factory\AbstractFactory;
 use CoiSA\ServiceProvider\AggregateServiceProvider;
 use CoiSA\ServiceProvider\Exception\ServiceProviderExceptionInterface;
 use Interop\Container\ServiceProviderInterface;
@@ -39,11 +40,13 @@ final class Container implements ContainerInterface
     /**
      * Container constructor.
      *
-     * @param AggregateServiceProvider $aggregateServiceProvider
+     * @param AggregateServiceProvider|null $aggregateServiceProvider
      */
-    public function __construct(AggregateServiceProvider $aggregateServiceProvider)
+    public function __construct(AggregateServiceProvider $aggregateServiceProvider = null)
     {
-        $this->aggregateServiceProvider = $aggregateServiceProvider;
+        $this->aggregateServiceProvider = $aggregateServiceProvider ?: AbstractFactory::create(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider'
+        );
     }
 
     /**
