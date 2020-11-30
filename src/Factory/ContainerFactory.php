@@ -16,7 +16,6 @@ namespace CoiSA\Container\Factory;
 use CoiSA\Container\Container;
 use CoiSA\Factory\AbstractFactory;
 use CoiSA\Factory\FactoryInterface;
-use CoiSA\ServiceProvider\AggregateServiceProvider;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -36,12 +35,10 @@ final class ContainerFactory implements FactoryInterface
     {
         $serviceProviders = \func_get_args();
 
-        $aggregateServiceProviderFactory = AbstractFactory::getFactory(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider'
+        $aggregateServiceProvider = AbstractFactory::create(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
+            $serviceProviders
         );
-
-        /** @var AggregateServiceProvider $aggregateServiceProvider */
-        $aggregateServiceProvider = $aggregateServiceProviderFactory->create($serviceProviders);
 
         $container = new Container($aggregateServiceProvider);
         AbstractFactory::setContainer($container);
