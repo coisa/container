@@ -52,7 +52,7 @@ final class ContainerFactoryTest extends TestCase
     /**
      * @dataProvider provideServiceProviders
      */
-    public function testCreateWillReturnContainerWithGivenServiceProviders()
+    public function testCreateWillCallAbstractFactoryCreateForAggregateServiceProviderWithGivenServiceProviders()
     {
         $serviceProviders         = \func_get_args();
         $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
@@ -65,6 +65,22 @@ final class ContainerFactoryTest extends TestCase
                     Assert::assertEquals($serviceProviders, $arguments[0]);
                 }
             )
+        );
+
+        \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
+    }
+
+    /**
+     * @dataProvider provideServiceProviders
+     */
+    public function testCreateWillReturnContainerWithGivenServiceProviders()
+    {
+        $serviceProviders         = \func_get_args();
+        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+
+        AbstractFactory::setFactory(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
+            new ProphecyFactory($aggregateServiceProvider)
         );
 
         $container = \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
