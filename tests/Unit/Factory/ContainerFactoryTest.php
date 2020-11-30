@@ -17,8 +17,8 @@ use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleOtherServiceProvider;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleServiceProvider;
 use CoiSA\Factory\AbstractFactory;
-use CoiSA\Factory\CallableFactory;
-use CoiSA\ServiceProvider\AggregateServiceProvider;
+use CoiSA\Factory\ProphecyFactory;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -55,13 +55,16 @@ final class ContainerFactoryTest extends TestCase
     public function testCreateWillReturnContainerWithGivenServiceProviders()
     {
         $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = new AggregateServiceProvider($serviceProviders);
+        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
 
         AbstractFactory::setFactory(
             'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            new CallableFactory(function() use ($aggregateServiceProvider) {
-                return $aggregateServiceProvider;
-            })
+            new ProphecyFactory(
+                $aggregateServiceProvider,
+                function ($objectProphecy, array $arguments) use ($serviceProviders) {
+                    Assert::assertEquals($serviceProviders, $arguments[0]);
+                }
+            )
         );
 
         $container = \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
@@ -71,6 +74,6 @@ final class ContainerFactoryTest extends TestCase
         $reflectionProperty = new \ReflectionProperty('CoiSA\\Container\\Container', 'aggregateServiceProvider');
         $reflectionProperty->setAccessible(true);
 
-        self::assertSame($aggregateServiceProvider, $reflectionProperty->getValue($container));
+        self::assertSame($aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
     }
 }
