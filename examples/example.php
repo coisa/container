@@ -17,7 +17,7 @@ use CoiSA\Factory\AbstractFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$exampleServiceProvider = new ExampleServiceProvider();
+$exampleServiceProvider = 'CoiSA\\Container\\Test\\Stub\\ServiceProvider\\ExampleServiceProvider';
 $otherServiceProvider   = new ExampleOtherServiceProvider();
 
 $container = AbstractFactory::create(
@@ -28,9 +28,8 @@ $container = AbstractFactory::create(
 
 \var_dump(
     // ExampleServiceProvider
-    $container->has(\get_class($exampleServiceProvider)),
-    $exampleServiceProvider === $container->get(\get_class($exampleServiceProvider)),
-    $container->get(\get_class($exampleServiceProvider)),
+    $container->has($exampleServiceProvider),
+    $container->get($exampleServiceProvider),
 
     // ExampleOtherServiceProvider
     $container->has(\get_class($otherServiceProvider)),
@@ -39,8 +38,8 @@ $container = AbstractFactory::create(
 );
 
 \var_dump(
-    AbstractFactory::getFactory(\get_class($exampleServiceProvider)) instanceof CoiSA\Factory\ContainerFactory,
-    AbstractFactory::getFactory(\get_class($exampleServiceProvider))
+    AbstractFactory::getFactory($exampleServiceProvider) instanceof CoiSA\Factory\ContainerFactory,
+    AbstractFactory::getFactory($exampleServiceProvider)
 );
 
 \var_dump(

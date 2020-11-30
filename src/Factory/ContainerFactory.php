@@ -49,12 +49,28 @@ final class ContainerFactory implements FactoryInterface
      */
     public function create()
     {
-        $serviceProviders         = \func_get_args();
+        $serviceProviders         = $this->getServiceProviders(\func_get_args());
         $aggregateServiceProvider = $this->aggregateServiceProviderFactory->create($serviceProviders);
         $container                = new Container($aggregateServiceProvider);
 
         AbstractFactory::setContainer($container);
 
         return $container;
+    }
+
+    /**
+     * @param array $serviceProviders
+     *
+     * @return array
+     */
+    private function getServiceProviders(array $serviceProviders)
+    {
+        foreach ($serviceProviders as &$serviceProvider) {
+            if (\is_string($serviceProvider)) {
+                $serviceProvider = new $serviceProvider();
+            }
+        }
+
+        return $serviceProviders;
     }
 }
