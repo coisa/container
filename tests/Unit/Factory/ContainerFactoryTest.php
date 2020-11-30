@@ -92,4 +92,25 @@ final class ContainerFactoryTest extends TestCase
 
         self::assertSame($aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
     }
+
+    /**
+     * @dataProvider provideServiceProviders
+     */
+    public function testCreateWillSetContainerForAbstractFactory()
+    {
+        $serviceProviders         = \func_get_args();
+        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+
+        AbstractFactory::setFactory(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
+            new ProphecyFactory($aggregateServiceProvider)
+        );
+
+        $container = \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
+
+        $reflectionProperty = new \ReflectionProperty('CoiSA\\Factory\\FactoryAbstractFactory', 'container');
+        $reflectionProperty->setAccessible(true);
+
+        self::assertSame($container, $reflectionProperty->getValue());
+    }
 }
