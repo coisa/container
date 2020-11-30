@@ -11,12 +11,10 @@
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-use CoiSA\Container\Factory\AggregateContainerFactory;
-use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Factory\AbstractFactory;
 
-$aggregateContainerFactory = new AggregateContainerFactory();
-$containerFactory          = new ContainerFactory();
+$aggregateContainerFactory = 'CoiSA\\Container\\Factory\\AggregateContainerFactory';
+$containerFactory          = 'CoiSA\\Container\\Factory\\ContainerFactory';
 
 AbstractFactory::setFactory('CoiSA\\Container\\AggregateContainer', $aggregateContainerFactory);
 AbstractFactory::setFactory('CoiSA\\Container\\Container', $containerFactory);
