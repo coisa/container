@@ -26,21 +26,33 @@ use Psr\Container\ContainerInterface;
 final class ContainerFactory implements FactoryInterface
 {
     /**
+     * @var FactoryInterface
+     */
+    private $aggregateServiceProviderFactory;
+
+    /**
+     * ContainerFactory constructor.
+     *
+     * @param FactoryInterface|null $aggregateServiceProviderFactory
+     */
+    public function __construct(FactoryInterface $aggregateServiceProviderFactory = null)
+    {
+        $this->aggregateServiceProviderFactory = $aggregateServiceProviderFactory ?: AbstractFactory::getFactory(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider'
+        );
+    }
+
+    /**
      * @return ContainerInterface
      *
      * @TODO Add support to ServiceProvider string classname
-     * @TODO Add support to ConfigProvider pattern
      */
     public function create()
     {
-        $serviceProviders = \func_get_args();
+        $serviceProviders         = \func_get_args();
+        $aggregateServiceProvider = $this->aggregateServiceProviderFactory->create($serviceProviders);
+        $container                = new Container($aggregateServiceProvider);
 
-        $aggregateServiceProvider = AbstractFactory::create(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            $serviceProviders
-        );
-
-        $container = new Container($aggregateServiceProvider);
         AbstractFactory::setContainer($container);
 
         return $container;

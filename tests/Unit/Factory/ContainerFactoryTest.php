@@ -17,9 +17,11 @@ use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleOtherServiceProvider;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleServiceProvider;
 use CoiSA\Factory\AbstractFactory;
-use CoiSA\Factory\ProphecyFactory;
-use PHPUnit\Framework\Assert;
+use CoiSA\Factory\FactoryInterface;
+use CoiSA\ServiceProvider\AggregateServiceProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Class ContainerFactoryTest.
@@ -29,13 +31,35 @@ use PHPUnit\Framework\TestCase;
 final class ContainerFactoryTest extends TestCase
 {
     /**
-     * @var ContainerFactory
+     * @var ObjectProphecy|AggregateServiceProvider
+     */
+    private $aggregateServiceProvider;
+
+    /**
+     * @var ObjectProphecy|FactoryInterface
      */
     private $factory;
 
+    /**
+     * @var ContainerFactory
+     */
+    private $containerFactory;
+
     public function setUp()
     {
-        $this->factory = new ContainerFactory();
+        $this->aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+        $this->factory                  = $this->prophesize('CoiSA\\Factory\\FactoryInterface');
+
+        $this->factory->create(Argument::any())->willReturn(
+            $this->aggregateServiceProvider->reveal()
+        );
+
+        AbstractFactory::setFactory(
+            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
+            $this->factory->reveal()
+        );
+
+        $this->containerFactory = new ContainerFactory($this->factory->reveal());
     }
 
     public function provideServiceProviders()
@@ -44,30 +68,33 @@ final class ContainerFactoryTest extends TestCase
             array(),
             array(new ExampleServiceProvider()),
             array(new ExampleServiceProvider(), new ExampleOtherServiceProvider()),
-            //array(ExampleServiceProvider::class),
-            //array(ExampleServiceProvider::class, ExampleOtherServiceProvider::class),
         );
     }
 
     /**
      * @dataProvider provideServiceProviders
      */
-    public function testCreateWillCallAbstractFactoryCreateForAggregateServiceProviderWithGivenServiceProviders()
+    public function testConstructWithoutFactoryWillCreateAbstractFactoryForAggregateServiceProvider()
     {
-        $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+        $serviceProviders = \func_get_args();
 
-        AbstractFactory::setFactory(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            new ProphecyFactory(
-                $aggregateServiceProvider,
-                function ($objectProphecy, array $arguments) use ($serviceProviders) {
-                    Assert::assertEquals($serviceProviders, $arguments[0]);
-                }
-            )
-        );
+        $this->factory->create($serviceProviders)->shouldBeCalledOnce();
 
-        \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
+        $this->containerFactory = new ContainerFactory();
+
+        \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
+    }
+
+    /**
+     * @dataProvider provideServiceProviders
+     */
+    public function testCreateWillCallConstructorFactoryCreateWithGivenServiceProviders()
+    {
+        $serviceProviders = \func_get_args();
+
+        $this->factory->create($serviceProviders)->shouldBeCalledOnce();
+
+        \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
     }
 
     /**
@@ -75,22 +102,16 @@ final class ContainerFactoryTest extends TestCase
      */
     public function testCreateWillReturnContainerWithGivenServiceProviders()
     {
-        $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+        $serviceProviders = \func_get_args();
 
-        AbstractFactory::setFactory(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            new ProphecyFactory($aggregateServiceProvider)
-        );
-
-        $container = \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
+        $container = \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
 
         self::assertInstanceOf('CoiSA\\Container\\Container', $container);
 
         $reflectionProperty = new \ReflectionProperty('CoiSA\\Container\\Container', 'aggregateServiceProvider');
         $reflectionProperty->setAccessible(true);
 
-        self::assertSame($aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
+        self::assertSame($this->aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
     }
 
     /**
@@ -98,15 +119,9 @@ final class ContainerFactoryTest extends TestCase
      */
     public function testCreateWillSetContainerForAbstractFactory()
     {
-        $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+        $serviceProviders  = \func_get_args();
 
-        AbstractFactory::setFactory(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            new ProphecyFactory($aggregateServiceProvider)
-        );
-
-        $container = \call_user_func_array(array($this->factory, 'create'), $serviceProviders);
+        $container = \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
 
         $reflectionProperty = new \ReflectionProperty('CoiSA\\Factory\\FactoryAbstractFactory', 'container');
         $reflectionProperty->setAccessible(true);
