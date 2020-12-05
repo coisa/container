@@ -15,7 +15,10 @@ namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\Container;
 use CoiSA\Factory\AbstractFactory;
+use CoiSA\Factory\Exception\InvalidArgumentException;
 use CoiSA\Factory\FactoryInterface;
+use CoiSA\ServiceProvider\LaminasConfigServiceProvider;
+use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -44,8 +47,6 @@ final class ContainerFactory implements FactoryInterface
 
     /**
      * @return ContainerInterface
-     *
-     * @TODO Add support to ServiceProvider string classname
      */
     public function create()
     {
@@ -68,6 +69,21 @@ final class ContainerFactory implements FactoryInterface
         foreach ($serviceProviders as &$serviceProvider) {
             if (\is_string($serviceProvider)) {
                 $serviceProvider = new $serviceProvider();
+            }
+
+            if (\is_callable($serviceProvider)) {
+                $serviceProvider = \call_user_func($serviceProvider);
+            }
+
+            if (\is_array($serviceProvider)) {
+                $serviceProvider = new LaminasConfigServiceProvider($serviceProvider);
+            }
+
+            if (!$serviceProvider instanceof ServiceProviderInterface) {
+                throw InvalidArgumentException::forInvalidArgumentType(
+                    'serviceProviders',
+                    'array<Interop\\Container\\ServiceProviderInterface|callable|array>'
+                );
             }
         }
 
