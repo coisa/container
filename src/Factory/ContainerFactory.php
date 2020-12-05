@@ -26,7 +26,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerFactory implements FactoryInterface
+final class ContainerFactory implements ContainerFactoryInterface
 {
     /**
      * @var FactoryInterface

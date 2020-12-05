@@ -15,7 +15,6 @@ namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\AggregateContainer;
 use CoiSA\Factory\AbstractFactory;
-use CoiSA\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -23,7 +22,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Container\Factory
  */
-final class AggregateContainerFactory implements FactoryInterface
+final class AggregateContainerFactory implements ContainerFactoryInterface
 {
     /**
      * @return ContainerInterface
