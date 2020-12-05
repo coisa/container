@@ -82,7 +82,7 @@ final class ContainerFactory implements FactoryInterface
             if (!$serviceProvider instanceof ServiceProviderInterface) {
                 throw InvalidArgumentException::forInvalidArgumentType(
                     'serviceProviders',
-                    'array<Interop\\Container\\ServiceProviderInterface|callable|array>'
+                    'array<Interop\\Container\\ServiceProviderInterface|callable|array|string>'
                 );
             }
         }
