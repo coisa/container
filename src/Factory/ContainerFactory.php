@@ -68,7 +68,7 @@ final class ContainerFactory implements ContainerFactoryInterface
     {
         foreach ($serviceProviders as &$serviceProvider) {
             if (\is_string($serviceProvider)) {
-                $serviceProvider = new $serviceProvider();
+                $serviceProvider = AbstractFactory::create($serviceProvider);
             }
 
             if (\is_callable($serviceProvider)) {
