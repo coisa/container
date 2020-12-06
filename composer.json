@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": ">=5.3",
-        "coisa/exceptions": "^1.0",
-        "coisa/factory": "^1.4",
-        "coisa/service-provider": "^1.1",
+        "coisa/exceptions": "~1.0",
+        "coisa/factory": "~1.6",
+        "coisa/service-provider": "~1.1",
         "container-interop/service-provider": "^0.4.0",
         "psr/container": "^1.0"
     },
