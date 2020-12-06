@@ -12,11 +12,16 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 use CoiSA\Factory\AbstractFactory;
+use CoiSA\Factory\AliasFactory;
 
-$aggregateContainerFactory = 'CoiSA\\Container\\Factory\\AggregateContainerFactory';
-$containerFactory          = 'CoiSA\\Container\\Factory\\ContainerFactory';
-
-AbstractFactory::setFactory('CoiSA\\Container\\AggregateContainer', $aggregateContainerFactory);
-AbstractFactory::setFactory('CoiSA\\Container\\Container', $containerFactory);
-AbstractFactory::setFactory('CoiSA\\Container\\ContainerInterface', $containerFactory);
-AbstractFactory::setFactory('Psr\\Container\\ContainerInterface', $containerFactory);
+\call_user_func(
+    function($aggregateContainerFactory, $containerFactory, $aliasFactory) {
+        AbstractFactory::setFactory('CoiSA\\Container\\AggregateContainer', $aggregateContainerFactory);
+        AbstractFactory::setFactory('CoiSA\\Container\\Container', $containerFactory);
+        AbstractFactory::setFactory('CoiSA\\Container\\ContainerInterface', $aliasFactory);
+        AbstractFactory::setFactory('Psr\\Container\\ContainerInterface', $aliasFactory);
+    },
+    'CoiSA\\Container\\Factory\\AggregateContainerFactory',
+    'CoiSA\\Container\\Factory\\ContainerFactory',
+    new AliasFactory('CoiSA\\Container\\Container')
+);
