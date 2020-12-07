@@ -11,8 +11,8 @@
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleOtherServiceProvider;
-use CoiSA\Container\Test\Stub\ServiceProvider\ExampleServiceProvider;
 use CoiSA\Factory\AbstractFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -25,6 +25,11 @@ $container = AbstractFactory::create(
     $exampleServiceProvider,
     $otherServiceProvider
 );
+// or
+//$container = CoiSA\Container\Factory\ContainerAbstractFactory::create(
+//    $exampleServiceProvider,
+//    $otherServiceProvider
+//);
 
 \var_dump(
     // ExampleServiceProvider

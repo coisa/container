@@ -16,11 +16,8 @@ namespace CoiSA\Container\Test\Unit\Factory;
 use CoiSA\Container\Factory\ContainerFactory;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleOtherServiceProvider;
 use CoiSA\Container\Test\Stub\ServiceProvider\ExampleServiceProvider;
-use CoiSA\Factory\AbstractFactory;
-use CoiSA\Factory\FactoryInterface;
 use CoiSA\ServiceProvider\AggregateServiceProvider;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
@@ -36,11 +33,6 @@ final class ContainerFactoryTest extends TestCase
     private $aggregateServiceProvider;
 
     /**
-     * @var ObjectProphecy|FactoryInterface
-     */
-    private $factory;
-
-    /**
      * @var ContainerFactory
      */
     private $containerFactory;
@@ -48,18 +40,7 @@ final class ContainerFactoryTest extends TestCase
     public function setUp()
     {
         $this->aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
-        $this->factory                  = $this->prophesize('CoiSA\\Factory\\FactoryInterface');
-
-        $this->factory->create(Argument::any())->willReturn(
-            $this->aggregateServiceProvider->reveal()
-        );
-
-        AbstractFactory::setFactory(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider',
-            $this->factory->reveal()
-        );
-
-        $this->containerFactory = new ContainerFactory($this->aggregateServiceProvider->reveal());
+        $this->containerFactory         = new ContainerFactory($this->aggregateServiceProvider->reveal());
     }
 
     public function provideServiceProviders()
@@ -69,20 +50,6 @@ final class ContainerFactoryTest extends TestCase
             array(new ExampleServiceProvider()),
             array(new ExampleServiceProvider(), new ExampleOtherServiceProvider()),
         );
-    }
-
-    /**
-     * @dataProvider provideServiceProviders
-     */
-    public function testConstructWithoutFactoryWillCreateAbstractFactoryForAggregateServiceProvider()
-    {
-        $serviceProviders = \func_get_args();
-
-        $this->factory->create()->shouldBeCalledOnce();
-
-        $this->containerFactory = new ContainerFactory();
-
-        \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
     }
 
     /**

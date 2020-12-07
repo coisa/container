@@ -36,20 +36,18 @@ final class ContainerFactory implements ContainerFactoryInterface
     /**,
      * ContainerFactory constructor.
      *
-     * @param AggregateServiceProvider|null $aggregateServiceProvider
+     * @param AggregateServiceProvider $aggregateServiceProvider
      */
-    public function __construct(AggregateServiceProvider $aggregateServiceProvider = null)
+    public function __construct(AggregateServiceProvider $aggregateServiceProvider)
     {
-        $this->aggregateServiceProvider = $aggregateServiceProvider ?: AbstractFactory::create(
-            'CoiSA\\ServiceProvider\\AggregateServiceProvider'
-        );
+        $this->aggregateServiceProvider = $aggregateServiceProvider;
     }
 
     /**
-     * @return ContainerInterface
-     *
      * @throws \CoiSA\Factory\Exception\ReflectionException
      * @throws \CoiSA\Factory\Exception\InvalidArgumentException
+     *
+     * @return ContainerInterface
      */
     public function create()
     {

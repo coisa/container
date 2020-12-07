@@ -11,7 +11,9 @@
  * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 use CoiSA\Factory\AbstractFactory;
+use CoiSA\Factory\AbstractFactoryFactory;
 use CoiSA\Factory\AliasFactory;
 
 \call_user_func(
@@ -22,6 +24,6 @@ use CoiSA\Factory\AliasFactory;
         AbstractFactory::setFactory('Psr\\Container\\ContainerInterface', $aliasFactory);
     },
     'CoiSA\\Container\\Factory\\AggregateContainerFactory',
-    'CoiSA\\Container\\Factory\\ContainerFactory',
+    new AbstractFactoryFactory('CoiSA\\Container\\Factory\\ContainerAbstractFactory'),
     new AliasFactory('CoiSA\\Container\\Container')
 );
