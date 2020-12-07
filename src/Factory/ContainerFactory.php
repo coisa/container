@@ -16,7 +16,7 @@ namespace CoiSA\Container\Factory;
 use CoiSA\Container\Container;
 use CoiSA\Factory\AbstractFactory;
 use CoiSA\Factory\Exception\InvalidArgumentException;
-use CoiSA\Factory\FactoryInterface;
+use CoiSA\ServiceProvider\AggregateServiceProvider;
 use CoiSA\ServiceProvider\LaminasConfigServiceProvider;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
@@ -29,44 +29,34 @@ use Psr\Container\ContainerInterface;
 final class ContainerFactory implements ContainerFactoryInterface
 {
     /**
-     * @var FactoryInterface
+     * @var AggregateServiceProvider
      */
-    private $aggregateServiceProviderFactory;
+    private $aggregateServiceProvider;
 
-    /**
+    /**,
      * ContainerFactory constructor.
      *
-     * @param FactoryInterface|null $aggregateServiceProviderFactory
+     * @param AggregateServiceProvider|null $aggregateServiceProvider
      */
-    public function __construct(FactoryInterface $aggregateServiceProviderFactory = null)
+    public function __construct(AggregateServiceProvider $aggregateServiceProvider = null)
     {
-        $this->aggregateServiceProviderFactory = $aggregateServiceProviderFactory ?: AbstractFactory::getFactory(
+        $this->aggregateServiceProvider = $aggregateServiceProvider ?: AbstractFactory::create(
             'CoiSA\\ServiceProvider\\AggregateServiceProvider'
         );
     }
 
     /**
      * @return ContainerInterface
+     *
+     * @throws \CoiSA\Factory\Exception\ReflectionException
+     * @throws \CoiSA\Factory\Exception\InvalidArgumentException
      */
     public function create()
     {
-        $serviceProviders         = $this->getServiceProviders(\func_get_args());
-        $aggregateServiceProvider = $this->aggregateServiceProviderFactory->create($serviceProviders);
-        $container                = new Container($aggregateServiceProvider);
+        $serviceProviders = \func_get_args();
+        $container        = new Container($this->aggregateServiceProvider);
 
-        AbstractFactory::setContainer($container);
-
-        return $container;
-    }
-
-    /**
-     * @param array $serviceProviders
-     *
-     * @return array
-     */
-    private function getServiceProviders(array $serviceProviders)
-    {
-        foreach ($serviceProviders as &$serviceProvider) {
+        foreach ($serviceProviders as $serviceProvider) {
             if (\is_string($serviceProvider)) {
                 $serviceProvider = AbstractFactory::create($serviceProvider);
             }
@@ -85,8 +75,12 @@ final class ContainerFactory implements ContainerFactoryInterface
                     'array<Interop\\Container\\ServiceProviderInterface|callable|array|string>'
                 );
             }
+
+            $container->register($serviceProvider);
         }
 
-        return $serviceProviders;
+        AbstractFactory::setContainer($container);
+
+        return $container;
     }
 }

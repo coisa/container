@@ -59,7 +59,7 @@ final class ContainerFactoryTest extends TestCase
             $this->factory->reveal()
         );
 
-        $this->containerFactory = new ContainerFactory($this->factory->reveal());
+        $this->containerFactory = new ContainerFactory($this->aggregateServiceProvider->reveal());
     }
 
     public function provideServiceProviders()
@@ -78,7 +78,7 @@ final class ContainerFactoryTest extends TestCase
     {
         $serviceProviders = \func_get_args();
 
-        $this->factory->create($serviceProviders)->shouldBeCalledOnce();
+        $this->factory->create()->shouldBeCalledOnce();
 
         $this->containerFactory = new ContainerFactory();
 
@@ -92,7 +92,9 @@ final class ContainerFactoryTest extends TestCase
     {
         $serviceProviders = \func_get_args();
 
-        $this->factory->create($serviceProviders)->shouldBeCalledOnce();
+        foreach ($serviceProviders as $serviceProvider) {
+            $this->aggregateServiceProvider->append($serviceProvider)->shouldBeCalledOnce();
+        }
 
         \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
     }
