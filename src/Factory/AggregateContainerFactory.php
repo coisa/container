@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/container.
  *
@@ -7,15 +9,16 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
- *
- * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2019-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Container\Factory;
 
 use CoiSA\Container\AggregateContainer;
+use CoiSA\Container\ContainerInterface;
 use CoiSA\Factory\AbstractFactory;
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 /**
  * Class AggregateContainerFactory.
@@ -24,13 +27,25 @@ use Psr\Container\ContainerInterface;
  */
 final class AggregateContainerFactory implements ContainerFactoryInterface
 {
+    private ContainerInterface $container;
+
     /**
-     * @return ContainerInterface
+     * AggregateContainerFactory constructor.
      */
-    public function create()
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function create(): AggregateContainer
     {
         $containers         = \func_get_args();
-        $aggregateContainer = new AggregateContainer($containers);
+        $aggregateContainer = new AggregateContainer(...$containers);
+
+        $this->container->setService(AggregateContainer::class, $aggregateContainer);
+        $this->container->setAlias(PsrContainerInterface::class, AggregateContainer::class);
+
+        $aggregateContainer->prepend($this->container);
 
         AbstractFactory::setContainer($aggregateContainer);
 

@@ -15,23 +15,23 @@ declare(strict_types=1);
 
 namespace CoiSA\Container\Factory;
 
+use CoiSA\Container\AggregateContainer;
 use CoiSA\Container\ContainerInterface;
 use CoiSA\Factory\AbstractFactory;
-use CoiSA\ServiceProvider\AggregateServiceProvider;
 
 /**
- * Class ContainerAbstractFactory.
+ * Class AggregateContainerAbstractFactory.
  *
  * @package CoiSA\Container\Factory
  */
-final class ContainerAbstractFactory implements ContainerAbstractFactoryInterface
+final class AggregateContainerAbstractFactory implements ContainerAbstractFactoryInterface
 {
-    public static function create(): ContainerInterface
+    public static function create(): AggregateContainer
     {
-        $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = AbstractFactory::create(AggregateServiceProvider::class);
-        $containerFactory         = new ContainerFactory($aggregateServiceProvider);
+        $containers                = \func_get_args();
+        $container                 = AbstractFactory::create(ContainerInterface::class);
+        $aggregateContainerFactory = new AggregateContainerFactory($container);
 
-        return $containerFactory->create($serviceProviders);
+        return $aggregateContainerFactory->create(...$containers);
     }
 }

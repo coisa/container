@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/container.
  *
@@ -7,10 +9,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
- *
- * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2019-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Container;
 
 use CoiSA\Exception\Container\ContainerException;
@@ -28,14 +30,9 @@ final class AggregateContainer implements ContainerInterface, \IteratorAggregate
     /**
      * @var array<ContainerInterface>
      */
-    private $containers = array();
+    private $containers = [];
 
-    /**
-     * AggregateContainer constructor.
-     *
-     * @param array<ContainerInterface> $containers
-     */
-    public function __construct(array $containers = array())
+    public function __construct(ContainerInterface ...$containers)
     {
         foreach ($containers as $container) {
             $this->append($container);
@@ -53,64 +50,61 @@ final class AggregateContainer implements ContainerInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->containers);
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @return self
      */
     public function prepend(ContainerInterface $container)
     {
-        \array_unshift($this->containers, $container);
+        $found = array_search($container, $this->containers, true);
+
+        if ($found) {
+            unset($this->containers[$found]);
+        }
+
+        array_unshift($this->containers, $container);
 
         return $this;
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @return self
      */
     public function append(ContainerInterface $container)
     {
-        $this->containers[] = $container;
+        if (!\in_array($container, $this->containers, true)) {
+            $this->containers[] = $container;
+        }
 
         return $this;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return bool
-     */
-    public function has($id)
+    public function has(string $id): bool
     {
-        return \array_reduce($this->containers, function($has, $container) use ($id) {
-            return $has || $container->has($id);
-        }, false);
+        return array_reduce($this->containers, fn ($has, $container) => $has || $container->has($id), false);
     }
 
     /**
-     * @param string $id
-     *
      * @return mixed
      */
-    public function get($id)
+    public function get(string $id)
     {
         if (!$this->has($id)) {
             throw NotFoundException::forNotFoundIdentifierFactory($id);
         }
 
-        return \array_reduce($this->containers, function($object, $container) use ($id) {
+        foreach ($this->containers as $container) {
             try {
-                return $object || ($container->has($id) ? $container->get($id) : false);
+                return $container->get($id);
             } catch (ContainerExceptionInterface $containerException) {
-                throw ContainerException::forExceptionResolvingIdentifier($containerException, $id);
             }
-        });
+        }
+
+        throw ContainerException::forExceptionResolvingIdentifier($containerException, $id);
     }
 }

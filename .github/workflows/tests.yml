@@ -1,0 +1,37 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ '7.4', '8.0', '8.1' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ matrix.php-version }}-{{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}
+
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ matrix.php-version }}
+
+      - name: PHPUnit Unit Test Suite
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ matrix.php-version }}
+          memory_limit: -1
+          command: test
+          args: -- --testsuite=Unit
