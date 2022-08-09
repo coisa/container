@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/container.
  *
@@ -7,10 +9,10 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
- *
- * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2019-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Container\Test\Unit\Factory;
 
 use CoiSA\Container\Factory\ContainerFactory;
@@ -24,11 +26,14 @@ use Prophecy\Prophecy\ObjectProphecy;
  * Class ContainerFactoryTest.
  *
  * @package CoiSA\Container\Test\Unit\Factory
+ *
+ * @internal
+ * @coversNothing
  */
 final class ContainerFactoryTest extends TestCase
 {
     /**
-     * @var ObjectProphecy|AggregateServiceProvider
+     * @var AggregateServiceProvider|ObjectProphecy
      */
     private $aggregateServiceProvider;
 
@@ -37,7 +42,7 @@ final class ContainerFactoryTest extends TestCase
      */
     private $containerFactory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->aggregateServiceProvider = $this->prophesize('CoiSA\\ServiceProvider\\AggregateServiceProvider');
         $this->containerFactory         = new ContainerFactory($this->aggregateServiceProvider->reveal());
@@ -45,17 +50,17 @@ final class ContainerFactoryTest extends TestCase
 
     public function provideServiceProviders()
     {
-        return array(
-            array(),
-            array(new ExampleServiceProvider()),
-            array(new ExampleServiceProvider(), new ExampleOtherServiceProvider()),
-        );
+        return [
+            [],
+            [new ExampleServiceProvider()],
+            [new ExampleServiceProvider(), new ExampleOtherServiceProvider()],
+        ];
     }
 
     /**
      * @dataProvider provideServiceProviders
      */
-    public function testCreateWillCallConstructorFactoryCreateWithGivenServiceProviders()
+    public function testCreateWillCallConstructorFactoryCreateWithGivenServiceProviders(): void
     {
         $serviceProviders = \func_get_args();
 
@@ -63,38 +68,38 @@ final class ContainerFactoryTest extends TestCase
             $this->aggregateServiceProvider->append($serviceProvider)->shouldBeCalledOnce();
         }
 
-        \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
+        \call_user_func_array([$this->containerFactory, 'create'], $serviceProviders);
     }
 
     /**
      * @dataProvider provideServiceProviders
      */
-    public function testCreateWillReturnContainerWithGivenServiceProviders()
+    public function testCreateWillReturnContainerWithGivenServiceProviders(): void
     {
         $serviceProviders = \func_get_args();
 
-        $container = \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
+        $container = \call_user_func_array([$this->containerFactory, 'create'], $serviceProviders);
 
-        self::assertInstanceOf('CoiSA\\Container\\Container', $container);
+        static::assertInstanceOf('CoiSA\\Container\\Container', $container);
 
         $reflectionProperty = new \ReflectionProperty('CoiSA\\Container\\Container', 'aggregateServiceProvider');
         $reflectionProperty->setAccessible(true);
 
-        self::assertSame($this->aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
+        static::assertSame($this->aggregateServiceProvider->reveal(), $reflectionProperty->getValue($container));
     }
 
     /**
      * @dataProvider provideServiceProviders
      */
-    public function testCreateWillSetContainerForAbstractFactory()
+    public function testCreateWillSetContainerForAbstractFactory(): void
     {
         $serviceProviders  = \func_get_args();
 
-        $container = \call_user_func_array(array($this->containerFactory, 'create'), $serviceProviders);
+        $container = \call_user_func_array([$this->containerFactory, 'create'], $serviceProviders);
 
         $reflectionProperty = new \ReflectionProperty('CoiSA\\Factory\\FactoryAbstractFactory', 'container');
         $reflectionProperty->setAccessible(true);
 
-        self::assertSame($container, $reflectionProperty->getValue());
+        static::assertSame($container, $reflectionProperty->getValue());
     }
 }

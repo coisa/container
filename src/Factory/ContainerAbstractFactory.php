@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/container.
  *
@@ -7,14 +9,15 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
- *
- * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2019-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\Container\Factory;
 
+use CoiSA\Container\ContainerInterface;
 use CoiSA\Factory\AbstractFactory;
-use Psr\Container\ContainerInterface;
+use CoiSA\ServiceProvider\AggregateServiceProvider;
 
 /**
  * Class ContainerAbstractFactory.
@@ -23,13 +26,10 @@ use Psr\Container\ContainerInterface;
  */
 final class ContainerAbstractFactory implements ContainerAbstractFactoryInterface
 {
-    /**
-     * @return ContainerInterface
-     */
-    public static function create()
+    public static function create(): ContainerInterface
     {
         $serviceProviders         = \func_get_args();
-        $aggregateServiceProvider = AbstractFactory::create('CoiSA\\ServiceProvider\\AggregateServiceProvider');
+        $aggregateServiceProvider = AbstractFactory::create(AggregateServiceProvider::class);
         $containerFactory         = new ContainerFactory($aggregateServiceProvider);
 
         return $containerFactory->create($serviceProviders);
