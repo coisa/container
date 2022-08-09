@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/container.
  *
@@ -7,23 +9,31 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/container
- *
- * @copyright Copyright (c) 2019-2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2019-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
+namespace CoiSA\Container;
+
+use CoiSA\Container\Factory\AggregateContainerAbstractFactory;
+use CoiSA\Container\Factory\ContainerAbstractFactory;
 use CoiSA\Factory\AbstractFactory;
 use CoiSA\Factory\AbstractFactoryFactory;
 use CoiSA\Factory\AliasFactory;
+use Psr\Container\ContainerInterface as PsrContainer;
 
 \call_user_func(
-    function($aggregateContainerFactory, $containerFactory, $aliasFactory) {
-        AbstractFactory::setFactory('CoiSA\\Container\\AggregateContainer', $aggregateContainerFactory);
-        AbstractFactory::setFactory('CoiSA\\Container\\Container', $containerFactory);
-        AbstractFactory::setFactory('CoiSA\\Container\\ContainerInterface', $aliasFactory);
-        AbstractFactory::setFactory('Psr\\Container\\ContainerInterface', $aliasFactory);
+    function (
+        AbstractFactoryFactory $aggregateContainerFactory,
+        AbstractFactoryFactory $containerFactory,
+        AliasFactory $aliasFactory
+    ): void {
+        AbstractFactory::setFactory(AggregateContainer::class, $aggregateContainerFactory);
+        AbstractFactory::setFactory(Container::class, $containerFactory);
+        AbstractFactory::setFactory(ContainerInterface::class, $aliasFactory);
+        AbstractFactory::setFactory(PsrContainer::class, $aliasFactory);
     },
-    'CoiSA\\Container\\Factory\\AggregateContainerFactory',
-    new AbstractFactoryFactory('CoiSA\\Container\\Factory\\ContainerAbstractFactory'),
-    new AliasFactory('CoiSA\\Container\\Container')
+    new AbstractFactoryFactory(AggregateContainerAbstractFactory::class),
+    new AbstractFactoryFactory(ContainerAbstractFactory::class),
+    new AliasFactory(Container::class)
 );
