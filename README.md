@@ -5,6 +5,11 @@
 [![Software License][ico-license]](LICENSE)
 [![Total Downloads][ico-downloads]][link-downloads]
 
+## Recommended replacement
+
+We recommend using [Fast Forward Container](https://github.com/php-fast-forward/container)
+([`fast-forward/container`](https://packagist.org/packages/fast-forward/container)) instead of `coisa/container`.
+
 ## Install
 
 ```sh
