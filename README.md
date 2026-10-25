@@ -1,5 +1,11 @@
 # CoiSA Container
 
+> [!WARNING]
+> **Recommended replacement**
+>
+> We recommend using [Fast Forward Container](https://github.com/php-fast-forward/container)
+> ([`fast-forward/container`](https://packagist.org/packages/fast-forward/container)) instead of `coisa/container`.
+
 [![PHP Version][ico-php]][link-packagist]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
